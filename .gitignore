@@ -26,3 +26,13 @@
 *.exe
 *.out
 *.app
+
+# Misc Visual Studio
+UpgradeLog.XML
+*.sdf
+*.suo
+*.old
+*.opensdf
+*.filters
+*.user
+ipch/
