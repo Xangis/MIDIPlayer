@@ -143,9 +143,6 @@
 			<File
 				RelativePath=".\Resource.h">
 			</File>
-			<File
-				RelativePath=".\stdafx.h">
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
