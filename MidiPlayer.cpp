@@ -67,32 +67,56 @@ void MidiPlayer::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
+	wxBoxSizer* itemBoxSizer4 = new wxBoxSizer(wxHORIZONTAL);
+	itemBoxSizer2->Add(itemBoxSizer4, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+
+	_btnPlay = new wxButton(itemDialog1, ID_BTN_PLAY, _("Play"));
+	itemBoxSizer4->Add(_btnPlay, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+
+	_btnStop = new wxButton(itemDialog1, ID_BTN_STOP, _("Stop"));
+	itemBoxSizer4->Add(_btnStop, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+
+	_btnExit = new wxButton(itemDialog1, ID_BTN_EXIT, _("Exit"));
+	itemBoxSizer4->Add(_btnExit, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+
+	_btnInfo = new wxButton(itemDialog1, ID_BTN_INFO, _("Info"));
+	itemBoxSizer4->Add(_btnInfo, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+
     wxBoxSizer* itemBoxSizer3 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer2->Add(itemBoxSizer3, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
     wxStaticText* itemStaticText11 = new wxStaticText( itemDialog1, wxID_STATIC, _("File:"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer3->Add(itemStaticText11, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-	wxTextCtrl* _txtFilename = new wxTextCtrl(itemDialog1, ID_TXT_FILENAME, _(""), wxDefaultPosition, wxSize(360, -1));
+	_txtFilename = new wxTextCtrl(itemDialog1, ID_TXT_FILENAME, _(""), wxDefaultPosition, wxSize(360, -1));
 	itemBoxSizer3->Add(_txtFilename, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-	wxButton* _btnBrowse = new wxButton(itemDialog1, ID_BTN_BROWSE, _("Browse"));
+	_btnBrowse = new wxButton(itemDialog1, ID_BTN_BROWSE, _("Browse"));
 	itemBoxSizer3->Add(_btnBrowse, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-	wxBoxSizer* itemBoxSizer4 = new wxBoxSizer(wxHORIZONTAL);
-	itemBoxSizer2->Add(itemBoxSizer4, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+	wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxHORIZONTAL);
+	itemBoxSizer2->Add(itemBoxSizer5, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-	wxButton* _btnPlay = new wxButton(itemDialog1, ID_BTN_PLAY, _("Play"));
-	itemBoxSizer4->Add(_btnPlay, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+	_txtLoadedFile = new wxStaticText(itemDialog1, ID_TXT_LOADEDFILE, _("File:"), wxDefaultPosition, wxSize(320, -1));
+	itemBoxSizer5->Add(_txtLoadedFile, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-	wxButton* _btnStop = new wxButton(itemDialog1, ID_BTN_STOP, _("Stop"));
-	itemBoxSizer4->Add(_btnStop, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+	_txtSongLength = new wxStaticText(itemDialog1, ID_TXT_LENGTH, _("Length:"), wxDefaultPosition, wxSize(100, -1));
+	itemBoxSizer5->Add(_txtSongLength, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-	wxButton* _btnExit = new wxButton(itemDialog1, ID_BTN_EXIT, _("Exit"));
-	itemBoxSizer4->Add(_btnExit, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+	wxBoxSizer* itemBoxSizer6 = new wxBoxSizer(wxHORIZONTAL);
+	itemBoxSizer2->Add(itemBoxSizer6, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-	wxButton* _btnInfo = new wxButton(itemDialog1, ID_BTN_INFO, _("Info"));
-	itemBoxSizer4->Add(_btnInfo, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+	_txtNumEvents = new wxStaticText(itemDialog1, ID_TXT_NUMEVENTS, _("Events:"), wxDefaultPosition, wxSize(100, -1));
+	itemBoxSizer6->Add(_txtNumEvents, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+
+	_txtNumTracks = new wxStaticText(itemDialog1, ID_TXT_NUMTRACKS, _("Tracks:"), wxDefaultPosition, wxSize(100, -1));
+	itemBoxSizer6->Add(_txtNumTracks, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+
+	_txtSize = new wxStaticText(itemDialog1, ID_TXT_SIZE, _("Size:"), wxDefaultPosition, wxSize(100, -1));
+	itemBoxSizer6->Add(_txtSize, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+
+	_txtType = new wxStaticText(itemDialog1, ID_TXT_TYPE, _("Type:"), wxDefaultPosition, wxSize(100, -1));
+	itemBoxSizer6->Add(_txtType, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     // Look for MIDI output devices before creating choice box.
 	wxArrayString deviceList;
@@ -181,7 +205,23 @@ void MidiPlayer::OnBrowse( wxCommandEvent& event )
 	}
 	_midiFile->Load(fname.c_str());
 
-    event.Skip();
+	_txtNumEvents->SetLabel(wxString::Format(_("Events: %d"), _midiFile->GetNumEvents()));
+	_txtNumTracks->SetLabel(wxString::Format(_("Tracks: %d"), _midiFile->GetNumTracks()));
+	_txtLoadedFile->SetLabel(wxString::Format(_("File: %s"), fname.c_str()));
+	_txtSize->SetLabel(wxString::Format(_("Size: %d"), _midiFile->GetSize()));
+	_txtType->SetLabel(wxString::Format(_("Type: %d"), _midiFile->GetType()));
+
+	int length = _midiFile->GetLength();
+	int seconds = 0;
+	int minutes = 0;
+	if( length >= 0 )
+	{
+		seconds = length % 60;
+		minutes = length / 60;
+	}
+	_txtSongLength->SetLabel(wxString::Format(_("Length: %d:%02d"), minutes, seconds));
+
+	event.Skip();
 }
 
 void MidiPlayer::OnPlay( wxCommandEvent& event )

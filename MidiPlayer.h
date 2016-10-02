@@ -27,7 +27,13 @@
 #define ID_BTN_STOP 10004
 #define ID_BTN_EXIT 10005
 #define ID_BTN_INFO 10006
+#define ID_TXT_NUMEVENTS 10007
+#define ID_TXT_NUMTRACKS 10008
+#define ID_TXT_LENGTH 10009
+#define ID_TXT_LOADEDFILE 10010
 #define ID_MIDI_DEVICE 10011
+#define ID_TXT_SIZE 10012
+#define ID_TXT_TYPE 10013
 
 /*!
  * Compatibility
@@ -67,6 +73,12 @@ private:
 	wxButton* _btnStop;
 	wxButton* _btnInfo;
 	wxTextCtrl* _txtFilename;
+	wxStaticText* _txtNumEvents;
+	wxStaticText* _txtNumTracks;
+	wxStaticText* _txtLoadedFile;
+	wxStaticText* _txtSongLength;
+	wxStaticText* _txtSize;
+	wxStaticText* _txtType;
 };
 
 #endif
