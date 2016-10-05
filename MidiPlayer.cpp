@@ -236,18 +236,18 @@ void MidiPlayer::OnBrowse( wxCommandEvent& event )
 
 	for( int i = 0; i < _midiFile->GetNumTracks(); i++ )
 	{
-		wxPanel* panel = new wxPanel(this, 0, 0, 480, 40);
-		//MidiTrackPanel* panel = new MidiTrackPanel(this, -1);
-		//panel->SetSize(480, 40);
+		//wxPanel* panel = new wxPanel(this, 0, 0, 480, 40);
+		MidiTrackPanel* panel = new MidiTrackPanel(this, -1);
+		panel->SetSize(480, 40);
 		panel->SetBackgroundColour(wxColour(((i+1) * 33) % 256, ((i + 1) * 49) % 256, ((i + 1) * 65) % 256));
-		//std::list<MIDIEvent*>* notes = _midiFile->GetTrackData(i);
-		//for( std::list<MIDIEvent*>::iterator it = notes->begin(); it != notes->end(); it++ )
-		//{
-		//	if( (*it)->message > 0x90 && (*it)->message < 0xA0 )
-		//	{
-		//		panel->AddMidiNote( (*it)->absoluteTime / ppqn, (*it)->value1 );
-		//	}
-		//}
+		std::list<MIDIEvent*>* notes = _midiFile->GetTrackData(i);
+		for( std::list<MIDIEvent*>::iterator it = notes->begin(); it != notes->end(); it++ )
+		{
+			if( (*it)->message > 0x90 && (*it)->message < 0xA0 )
+			{
+				panel->AddMidiNote( (*it)->absoluteTime / ppqn, (*it)->value1 );
+			}
+		}
 		_trackPanelSizer->Add(panel);
 	}
 	Fit();
