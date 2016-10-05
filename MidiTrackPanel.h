@@ -10,11 +10,11 @@ class MidiTrackPanel : public wxPanel
 public:
 	MidiTrackPanel();
 	~MidiTrackPanel();
-    MidiTrackPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, const wxSize &size = wxDefaultSize, long style = 0 )
+    MidiTrackPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, const wxSize &size = wxSize(480, 40), long style = 0 )
     {
         Create( parent, id, pos, size, style );
     }
-    void Create( wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, const wxSize &size = wxDefaultSize, long style = 0 );
+    void Create( wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, const wxSize &size = wxSize(480, 40), long style = 0 );
 	void OnPaint( wxPaintEvent& event );
 	void AddMidiNote(int time, int note);
 	DECLARE_EVENT_TABLE()
