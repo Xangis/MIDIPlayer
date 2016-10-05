@@ -2,6 +2,7 @@
 #include "wx/aboutdlg.h"
 #include "wx/strconv.h"
 #include "MidiPlayer.h"
+#include "MidiTrackPanel.h"
 
 IMPLEMENT_DYNAMIC_CLASS( MidiPlayer, wxDialog )
 
@@ -94,6 +95,9 @@ void MidiPlayer::CreateControls()
 	_btnBrowse = new wxButton(itemDialog1, ID_BTN_BROWSE, _("Browse"));
 	itemBoxSizer3->Add(_btnBrowse, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
+	_trackPanelSizer = new wxBoxSizer(wxVERTICAL);
+	itemBoxSizer2->Add(_trackPanelSizer, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+
 	wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxHORIZONTAL);
 	itemBoxSizer2->Add(itemBoxSizer5, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
@@ -118,7 +122,10 @@ void MidiPlayer::CreateControls()
 	_txtType = new wxStaticText(itemDialog1, ID_TXT_TYPE, _("Type:"), wxDefaultPosition, wxSize(100, -1));
 	itemBoxSizer6->Add(_txtType, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-    // Look for MIDI output devices before creating choice box.
+	_txtPPQN = new wxStaticText(itemDialog1, ID_TXT_TYPE, _("PPQN:"), wxDefaultPosition, wxSize(100, -1));
+	itemBoxSizer6->Add(_txtPPQN, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+
+	// Look for MIDI output devices before creating choice box.
 	wxArrayString deviceList;
     unsigned int nPorts = _midiOutDevice->getPortCount();
     std::string portName;
@@ -210,6 +217,9 @@ void MidiPlayer::OnBrowse( wxCommandEvent& event )
 	_txtLoadedFile->SetLabel(wxString::Format(_("File: %s"), fname.c_str()));
 	_txtSize->SetLabel(wxString::Format(_("Size: %d"), _midiFile->GetSize()));
 	_txtType->SetLabel(wxString::Format(_("Type: %d"), _midiFile->GetType()));
+	int ppqn = _midiFile->GetPPQN();
+	if( ppqn == 0 ) ppqn = 1;
+	_txtPPQN->SetLabel(wxString::Format(_("PPQN: %d"), ppqn));
 
 	int length = _midiFile->GetLength();
 	int seconds = 0;
@@ -220,6 +230,27 @@ void MidiPlayer::OnBrowse( wxCommandEvent& event )
 		minutes = length / 60;
 	}
 	_txtSongLength->SetLabel(wxString::Format(_("Length: %d:%02d"), minutes, seconds));
+
+	// TODO: Clear all tracks on load.
+	//_trackPanelSizer->DeleteWindows();
+
+	for( int i = 0; i < _midiFile->GetNumTracks(); i++ )
+	{
+		wxPanel* panel = new wxPanel(this, 0, 0, 480, 40);
+		//MidiTrackPanel* panel = new MidiTrackPanel(this, -1);
+		//panel->SetSize(480, 40);
+		panel->SetBackgroundColour(wxColour(((i+1) * 33) % 256, ((i + 1) * 49) % 256, ((i + 1) * 65) % 256));
+		//std::list<MIDIEvent*>* notes = _midiFile->GetTrackData(i);
+		//for( std::list<MIDIEvent*>::iterator it = notes->begin(); it != notes->end(); it++ )
+		//{
+		//	if( (*it)->message > 0x90 && (*it)->message < 0xA0 )
+		//	{
+		//		panel->AddMidiNote( (*it)->absoluteTime / ppqn, (*it)->value1 );
+		//	}
+		//}
+		_trackPanelSizer->Add(panel);
+	}
+	Fit();
 
 	event.Skip();
 }

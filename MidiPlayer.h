@@ -79,6 +79,9 @@ private:
 	wxStaticText* _txtSongLength;
 	wxStaticText* _txtSize;
 	wxStaticText* _txtType;
+	wxStaticText* _txtPPQN;
+	std::list<wxPanel*> _trackPanels;
+	wxSizer* _trackPanelSizer;
 };
 
 #endif

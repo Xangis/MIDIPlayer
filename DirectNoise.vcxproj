@@ -94,10 +94,12 @@
   <ItemGroup>
     <ClCompile Include="MidiPlayer.cpp" />
     <ClCompile Include="MidiPlayerApp.cpp" />
+    <ClCompile Include="MidiTrackPanel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MidiPlayer.h" />
     <ClInclude Include="MidiPlayerApp.h" />
+    <ClInclude Include="MidiTrackPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectNoise.rc" />
