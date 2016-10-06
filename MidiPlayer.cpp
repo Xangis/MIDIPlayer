@@ -206,10 +206,11 @@ void MidiPlayer::OnBrowse( wxCommandEvent& event )
 
 	wxString value;
 	wxString fname = fdialog.GetPath();
-	if( _midiFile == NULL )
+	if( _midiFile != NULL )
 	{
-		_midiFile = new MidiFile();
+		delete _midiFile;
 	}
+	_midiFile = new MidiFile();
 	_midiFile->Load(fname.c_str());
 
 	_txtNumEvents->SetLabel(wxString::Format(_("Events: %d"), _midiFile->GetNumEvents()));
@@ -240,8 +241,8 @@ void MidiPlayer::OnBrowse( wxCommandEvent& event )
 		MidiTrackPanel* panel = new MidiTrackPanel(this, -1);
 		panel->SetSize(480, 40);
 		panel->SetBackgroundColour(wxColour(((i+1) * 33) % 256, ((i + 1) * 49) % 256, ((i + 1) * 65) % 256));
-		std::list<MIDIEvent*>* notes = _midiFile->GetTrackData(i);
-		for( std::list<MIDIEvent*>::iterator it = notes->begin(); it != notes->end(); it++ )
+		MidiTrack* notes = _midiFile->GetTrackData(i);
+		for( std::list<MIDIEvent*>::iterator it = notes->_midiEvents.begin(); it != notes->_midiEvents.end(); it++ )
 		{
 			if( (*it)->message > 0x90 && (*it)->message < 0xA0 )
 			{
