@@ -14,7 +14,7 @@ INCLUDEDIR3 = ../Sigmatizm/rtmidi-2.1.0
 LIBDIR = /usr/local/lib
 
 # Object files
-OBJECTS = MidiPlayerApp.o MidiPlayer.o MidiTrackPanel.o $(INCLUDEDIR3)/RtMidi.o ../MidiFile/MidiFile.o
+OBJECTS = MidiPlayerApp.o MidiPlayer.o MidiTrackPanel.o $(INCLUDEDIR3)/RtMidi.o ../MidiFile/MidiFile.o ../MidiFile/MidiTrack.o
 
 #CXX = $(shell $(WX_CONFIG) --cxx -ggdb)
 CXX = $(shell $(WX_CONFIG) --cxx -O3)
