@@ -13,7 +13,7 @@ BEGIN_EVENT_TABLE( MidiPlayer, wxDialog )
 	EVT_BUTTON( ID_BTN_INFO, MidiPlayer::OnInfo )
 	EVT_BUTTON( ID_BTN_BROWSE, MidiPlayer::OnBrowse )
 	EVT_BUTTON( ID_BTN_PLAY, MidiPlayer::OnPlay )
-	EVT_BUTTON( ID_BTN_STOP, MidiPlayer::OnStop )
+	//EVT_BUTTON( ID_BTN_STOP, MidiPlayer::OnStop )
 	EVT_BUTTON( ID_BTN_EXIT, MidiPlayer::OnExit )
 END_EVENT_TABLE()
 
@@ -58,6 +58,21 @@ bool MidiPlayer::Create( wxWindow* parent, wxWindowID id, const wxString& captio
 	{
 		SetIcon(_icon);
 	}
+
+#ifdef WIN32
+	// Set up timer
+	QueryPerformanceFrequency( &_tickspersec );
+	QueryPerformanceCounter( &_currtime );
+	_lasttime = _currtime;
+#endif
+#ifdef linux
+    clock_gettime(CLOCK_MONOTONIC, &_currtime);
+#endif
+#ifdef __APPLE__
+	clock_get_time(_clock, &_currtime);
+#endif
+
+
     return true;
 }
 
@@ -74,8 +89,8 @@ void MidiPlayer::CreateControls()
 	_btnPlay = new wxButton(itemDialog1, ID_BTN_PLAY, _("Play"));
 	itemBoxSizer4->Add(_btnPlay, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-	_btnStop = new wxButton(itemDialog1, ID_BTN_STOP, _("Stop"));
-	itemBoxSizer4->Add(_btnStop, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+	//_btnStop = new wxButton(itemDialog1, ID_BTN_STOP, _("Stop"));
+	//itemBoxSizer4->Add(_btnStop, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
 	_btnExit = new wxButton(itemDialog1, ID_BTN_EXIT, _("Exit"));
 	itemBoxSizer4->Add(_btnExit, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
@@ -258,16 +273,106 @@ void MidiPlayer::OnBrowse( wxCommandEvent& event )
 
 void MidiPlayer::OnPlay( wxCommandEvent& event )
 {
+	_mutex.Lock();
+	if( !_playing )
+	{
+		_playing = true;
+		//_step = 0;
+		//_measure = 0;
+		_btnPlay->SetLabel(_("Stop"));
+	}
+	else
+	{
+		_playing = false;
+		_btnPlay->SetLabel(_("Play"));
+        //AllNotesOff();
+	}
+	_mutex.Unlock();
     event.Skip();
 }
 
-void MidiPlayer::OnStop( wxCommandEvent& event )
-{
-    event.Skip();
-}
+//void MidiPlayer::OnStop( wxCommandEvent& event )
+//{
+//    event.Skip();
+//}
 
 void MidiPlayer::OnExit( wxCommandEvent& event )
 {
 	Close();
     event.Skip();
+}
+
+// Thread to play the beat - makes dialog independent of sound.
+void* MidiPlayer::Entry( )
+{
+	// LARGE_INTEGER difference, sum;
+	int counter = 0;
+	static int mutateMeasure = 0;
+	while( !TestDestroy())
+	{
+		_mutex.Lock();
+		if( _playing == true )
+		{
+#ifdef WIN32
+			QueryPerformanceCounter( &_currtime );
+#endif
+#ifdef linux
+                        clock_gettime(CLOCK_MONOTONIC, &_currtime);
+#endif
+#ifdef __APPLE__
+			clock_get_time(_clock, &_currtime);
+#endif
+			// BPM / 60 = Beats per second.
+			// Ticks per second / beats per second = ticks per beat.
+			// 1 beat = quarter note.
+			// We are treating each box as a beat, giving us 16 beats per pattern.  This makes
+			// it easy because 1 box = 1 step = 1 beat.  We can change the ratio later if need be.
+			//
+			// difference.QuadPart = (currtime.QuadPart - lasttime.QuadPart);
+			// sum.QuadPart = ((tickspersec.QuadPart * 60.0f ) / (float)bpm );
+			// if( difference.QuadPart > sum.QuadPart )
+
+			// Compensate for "swing" setting.
+			double nextNoteTime;
+			// Long note.
+			int bpm = 120;
+#ifdef WIN32
+			nextNoteTime = ((_tickspersec.QuadPart * 60.0f ) / (double)bpm);
+#else
+			// Working in nanoseconds on *NIX.
+			nextNoteTime = ( 60000000000.0f / (double)_bpm);
+#endif
+
+#ifdef WIN32
+			if( (_currtime.QuadPart - _lasttime.QuadPart) > nextNoteTime )
+#else
+            double oldNS = _lasttime.tv_sec * 1000000000.0 + _lasttime.tv_nsec;
+            double newNS = _currtime.tv_sec * 1000000000.0 + _currtime.tv_nsec;
+			if( (newNS - oldNS) > nextNoteTime )
+#endif
+			{
+				if( _midiOutDevice )
+				{
+                    // 00 (not used), 7F (velocity), 2B (note number), 9X (note on)+channel
+                    //SendMidiMessage( 0, volume, midival[_drumControl[counter]->_drumNote], (144 + _outputChannel) );
+                    //SendMidiMessage( 0, volume, midival[_drumControl[counter]->_drumNote], (160 + _outputChannel) );
+				}
+				// Set our time so we know when to play the next beat.
+				// By not adding the time it took us to actually play the beat we maintain timing consistency.
+				_lasttime = _currtime;
+				_mutex.Unlock();
+			}
+			else
+			{
+				_mutex.Unlock();
+				Sleep(1);
+			}
+		}
+		else
+		{
+			_mutex.Unlock();
+			Sleep(1);
+		}
+	}
+	return 0;
 }

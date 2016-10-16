@@ -9,8 +9,16 @@
 #include "wx/html/helpctrl.h"
 #include "wx/stdpaths.h"
 #include "RtMidi.h"
-
 #include "../MidiFile/MidiFile.h"
+
+// High-performance timer.
+#ifdef linux
+#include <time.h>
+#endif
+#ifdef __APPLE__
+#include <mach/clock.h>
+#include <mach/mach.h>
+#endif
 
 /*!
  * Control identifiers
@@ -45,7 +53,7 @@
 /*!
  * wxKeyboard class declaration
  */
-class MidiPlayer: public wxDialog
+class MidiPlayer: public wxDialog, public wxThread
 {
     DECLARE_DYNAMIC_CLASS( MidiPlayer )
     DECLARE_EVENT_TABLE()
@@ -61,16 +69,19 @@ public:
 	void OnInfo( wxCommandEvent& event );
 	void OnBrowse( wxCommandEvent& event );
 	void OnPlay( wxCommandEvent& event );
-	void OnStop( wxCommandEvent& event );
+	//void OnStop( wxCommandEvent& event );
 	void OnExit( wxCommandEvent& event );
+	void *Entry();
+	void SelectMidiOutputDevice(int number);
+	void SelectMidiOutputChannel(int number);
 private:
+	wxMutex _mutex;
 	wxIcon _icon;
 	MidiFile* _midiFile;
-    RtMidiOut* _midiOutDevice;
 	wxButton* _btnPlay;
 	wxButton* _btnExit;
 	wxButton* _btnBrowse;
-	wxButton* _btnStop;
+	//wxButton* _btnStop;
 	wxButton* _btnInfo;
 	wxTextCtrl* _txtFilename;
 	wxStaticText* _txtNumEvents;
@@ -82,6 +93,24 @@ private:
 	wxStaticText* _txtPPQN;
 	std::list<wxPanel*> _trackPanels;
 	wxSizer* _trackPanelSizer;
+	bool _playing;		// Are we playing?
+    int _outputChannel;
+    int _midiOutputDeviceNumber;
+    RtMidiOut* _midiOutDevice;
+#ifdef WIN32
+	LARGE_INTEGER _currtime;
+	LARGE_INTEGER _lasttime;
+	LARGE_INTEGER _tickspersec;
+#endif
+#ifdef linux
+    struct timespec _currtime;
+    struct timespec _lasttime;
+#endif
+#ifdef __APPLE__
+    clock_serv_t _clock;
+    mach_timespec_t _currtime;
+    mach_timespec_t _lasttime;
+#endif
 };
 
 #endif
