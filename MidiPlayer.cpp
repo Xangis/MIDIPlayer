@@ -8,7 +8,7 @@ IMPLEMENT_DYNAMIC_CLASS( MidiPlayer, wxDialog )
 
 BEGIN_EVENT_TABLE( MidiPlayer, wxDialog )
     EVT_CLOSE( MidiPlayer::OnCloseWindow )
-	//EVT_CHOICE( ID_MIDI_DEVICE, MidiPlayer::OnChangeMidiDevice )
+	EVT_CHOICE( ID_MIDI_DEVICE, MidiPlayer::OnChangeMidiDevice )
 	//EVT_BUTTON( ID_HELPBUTTON, MidiPlayer::OnHelp )
 	EVT_BUTTON( ID_BTN_INFO, MidiPlayer::OnInfo )
 	EVT_BUTTON( ID_BTN_BROWSE, MidiPlayer::OnBrowse )
@@ -26,11 +26,16 @@ MidiPlayer::~MidiPlayer()
 {
 	_playing = false;
 	Pause();
+	AllNotesOff();
 	// Give everything a chance to finish up.
 	Sleep(10);
 	if( _midiFile != NULL )
 	{
 		delete _midiFile;
+	}
+	if(_midiOutDevice != NULL )
+	{
+		_midiOutDevice->closePort();
 	}
 }
 
@@ -43,6 +48,7 @@ MidiPlayer::MidiPlayer( wxWindow* parent, wxWindowID id, const wxString& caption
 bool MidiPlayer::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
 	//_helpCtrl = NULL;
+	_device = NULL;
 	_midiFile = NULL;
 	_playing = false;
     SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
@@ -111,6 +117,45 @@ void MidiPlayer::CreateControls()
 	_btnInfo = new wxButton(itemDialog1, ID_BTN_INFO, _("Info"));
 	itemBoxSizer4->Add(_btnInfo, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
+	wxBoxSizer* itemBoxSizer25 = new wxBoxSizer(wxHORIZONTAL);
+	itemBoxSizer2->Add(itemBoxSizer25, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+
+	// Look for MIDI output devices before creating choice box.
+	wxArrayString deviceList;
+    unsigned int nPorts = _midiOutDevice->getPortCount();
+    std::string portName;
+    std::cout << "\nThere are " << nPorts << " MIDI output ports available.\n";
+    for ( unsigned int i=0; i < nPorts; i++ )
+    {
+        try
+        {
+          portName = _midiOutDevice->getPortName(i);
+          wxString port(portName.c_str(), wxConvUTF8, portName.length());
+          deviceList.Add( port );
+        }
+        catch (RtMidiError &error)
+        {
+          error.printMessage();
+        }
+        std::cout << "  Output Port #" << i+1 << ": " << portName << '\n';
+    }
+    std::cout << '\n';
+
+    try
+    {
+        _midiOutDevice->openPort(0);
+    }
+    catch( RtMidiError &error )
+    {
+        // I don't know why trying to get a std::string into a wxString is so fucking hard.
+        wxString message(error.getMessage().c_str(), wxConvUTF8, error.getMessage().length());
+        wxMessageBox(message, _("Error Opening MIDI Out"));
+    }
+
+    _device = new wxChoice( itemDialog1, ID_MIDI_DEVICE, wxDefaultPosition, wxDefaultSize, deviceList );
+	_device->SetSelection(0);
+    itemBoxSizer25->Add(_device, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
     wxBoxSizer* itemBoxSizer3 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer2->Add(itemBoxSizer3, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
@@ -156,40 +201,8 @@ void MidiPlayer::CreateControls()
 	_txtBPM = new wxStaticText(itemDialog1, ID_TXT_TYPE, _("BPM:"), wxDefaultPosition, wxSize(100, -1));
 	itemBoxSizer6->Add(_txtBPM, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-	// Look for MIDI output devices before creating choice box.
-	wxArrayString deviceList;
-    unsigned int nPorts = _midiOutDevice->getPortCount();
-    std::string portName;
-    std::cout << "\nThere are " << nPorts << " MIDI output ports available.\n";
-    for ( unsigned int i=0; i < nPorts; i++ )
-    {
-        try
-        {
-          portName = _midiOutDevice->getPortName(i);
-          wxString port(portName.c_str(), wxConvUTF8, portName.length());
-          deviceList.Add( port );
-        }
-        catch (RtMidiError &error)
-        {
-          error.printMessage();
-        }
-        std::cout << "  Output Port #" << i+1 << ": " << portName << '\n';
-    }
-    std::cout << '\n';
-
-    try
-    {
-        _midiOutDevice->openPort(0);
-    }
-    catch( RtMidiError &error )
-    {
-        // I don't know why trying to get a std::string into a wxString is so fucking hard.
-        wxString message(error.getMessage().c_str(), wxConvUTF8, error.getMessage().length());
-        wxMessageBox(message, _("Error Opening MIDI Out"));
-    }
-
-    wxBoxSizer* itemBoxSizer12 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer2->Add(itemBoxSizer12, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    //wxBoxSizer* itemBoxSizer12 = new wxBoxSizer(wxHORIZONTAL);
+    //itemBoxSizer2->Add(itemBoxSizer12, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 }
 
 /**
@@ -308,7 +321,7 @@ void MidiPlayer::OnPlay( wxCommandEvent& event )
 	{
 		_playing = false;
 		_btnPlay->SetLabel(_("Play"));
-        //AllNotesOff();
+        AllNotesOff();
 	}
 	_mutex.Unlock();
     event.Skip();
@@ -411,5 +424,40 @@ void MidiPlayer::SendMidiMessage(unsigned char byte1, unsigned char byte2, unsig
 #ifndef VST
       _midiOutDevice->sendMessage(&msg);
 #endif
+    }
+}
+
+/**
+* Turns off all notes.
+*/
+void MidiPlayer::AllNotesOff()
+{
+	// 00 (not used), 0x00, 123, 0xBX (message + channel)
+	for( int i = 0; i < 16; i++ )
+	{
+		SendMidiMessage( 0, 0, 123, (176 + i) );
+	}
+}
+
+/**
+* Processes MIDI output device selection changes.
+*/
+void MidiPlayer::OnChangeMidiDevice( wxCommandEvent& event )
+{
+    AllNotesOff();
+    try
+    {
+        // Close the old device
+        std::cout << "Closing port: " << _midiOutDevice->getPortName() << std::endl;
+        _midiOutDevice->closePort();
+	    // Subtract 1 because the first device is -1 (MIDI Mapper).
+	    int selection = _device->GetCurrentSelection( );
+        std::cout << "Opening port: " << _midiOutDevice->getPortName(selection) << std::endl;
+	    _midiOutDevice->openPort(selection);
+    }
+    catch( RtMidiError &error )
+    {
+        // I don't know why trying to get a std::string into a wxString is so fucking hard.
+        //wxMessageBox(wxString(error.getMessage()), _("Error Opening MIDI Out"));
     }
 }

@@ -42,6 +42,7 @@
 #define ID_MIDI_DEVICE 10011
 #define ID_TXT_SIZE 10012
 #define ID_TXT_TYPE 10013
+#define ID_MIDI_DEVICE 10014
 
 /*!
  * Compatibility
@@ -74,6 +75,8 @@ public:
 	void *Entry();
 	void SelectMidiOutputDevice(int number);
 	void SelectMidiOutputChannel(int number);
+	void OnChangeMidiDevice( wxCommandEvent& event );
+	void AllNotesOff();
     void SendMidiMessage( unsigned char byte1, unsigned char byte2, unsigned char byte3, unsigned char byte4, bool shortmsg = false );
 private:
 	wxMutex _mutex;
@@ -84,6 +87,7 @@ private:
 	wxButton* _btnBrowse;
 	//wxButton* _btnStop;
 	wxButton* _btnInfo;
+	wxChoice* _device;
 	wxTextCtrl* _txtFilename;
 	wxStaticText* _txtNumEvents;
 	wxStaticText* _txtNumTracks;
