@@ -26,7 +26,7 @@ void MidiTrackPanel::OnPaint( wxPaintEvent& event )
 	dc.SetBrush(*wxWHITE_BRUSH);
 	for( std::list<std::pair<int, int> >::iterator it = _midiNotes.begin(); it != _midiNotes.end(); it++ )
 	{
-		dc.DrawRectangle((*it).first, (*it).second/3, 5, 5);
+		dc.DrawRectangle((*it).first, ((*it).second * 35)/127, 5, 5);
 	}
 
 	event.Skip(false);

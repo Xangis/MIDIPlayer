@@ -61,7 +61,7 @@ public:
     /// Constructors
     MidiPlayer( );
     MidiPlayer( wxWindow* parent, wxWindowID id = SYMBOL_WXKEYBOARD_IDNAME, const wxString& caption = SYMBOL_WXKEYBOARD_TITLE, const wxPoint& pos = SYMBOL_WXKEYBOARD_POSITION, const wxSize& size = SYMBOL_WXKEYBOARD_SIZE, long style = SYMBOL_WXKEYBOARD_STYLE );
-	virtual ~MidiPlayer() { };
+	virtual ~MidiPlayer();
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_WXKEYBOARD_IDNAME, const wxString& caption = SYMBOL_WXKEYBOARD_TITLE, const wxPoint& pos = SYMBOL_WXKEYBOARD_POSITION, const wxSize& size = SYMBOL_WXKEYBOARD_SIZE, long style = SYMBOL_WXKEYBOARD_STYLE );
     void CreateControls();
@@ -91,6 +91,7 @@ private:
 	wxStaticText* _txtSize;
 	wxStaticText* _txtType;
 	wxStaticText* _txtPPQN;
+	wxStaticText* _txtBPM;
 	std::list<wxPanel*> _trackPanels;
 	wxSizer* _trackPanelSizer;
 	bool _playing;		// Are we playing?

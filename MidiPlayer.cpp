@@ -22,6 +22,14 @@ MidiPlayer::MidiPlayer( )
 {
 }
 
+MidiPlayer::~MidiPlayer()
+{
+	if( _midiFile != NULL )
+	{
+		delete _midiFile;
+	}
+}
+
 MidiPlayer::MidiPlayer( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
     Create(parent, id, caption, pos, size, style);
@@ -32,6 +40,7 @@ bool MidiPlayer::Create( wxWindow* parent, wxWindowID id, const wxString& captio
 {
 	//_helpCtrl = NULL;
 	_midiFile = NULL;
+	_playing = false;
     SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
     _midiOutDevice = new RtMidiOut();
     wxDialog::Create( parent, id, caption, pos, size, style );
@@ -104,7 +113,7 @@ void MidiPlayer::CreateControls()
     wxStaticText* itemStaticText11 = new wxStaticText( itemDialog1, wxID_STATIC, _("File:"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer3->Add(itemStaticText11, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-	_txtFilename = new wxTextCtrl(itemDialog1, ID_TXT_FILENAME, _(""), wxDefaultPosition, wxSize(360, -1));
+	_txtFilename = new wxTextCtrl(itemDialog1, ID_TXT_FILENAME, _(""), wxDefaultPosition, wxSize(460, -1));
 	itemBoxSizer3->Add(_txtFilename, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
 	_btnBrowse = new wxButton(itemDialog1, ID_BTN_BROWSE, _("Browse"));
@@ -139,6 +148,9 @@ void MidiPlayer::CreateControls()
 
 	_txtPPQN = new wxStaticText(itemDialog1, ID_TXT_TYPE, _("PPQN:"), wxDefaultPosition, wxSize(100, -1));
 	itemBoxSizer6->Add(_txtPPQN, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+
+	_txtBPM = new wxStaticText(itemDialog1, ID_TXT_TYPE, _("BPM:"), wxDefaultPosition, wxSize(100, -1));
+	itemBoxSizer6->Add(_txtBPM, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
 	// Look for MIDI output devices before creating choice box.
 	wxArrayString deviceList;
@@ -227,12 +239,14 @@ void MidiPlayer::OnBrowse( wxCommandEvent& event )
 	}
 	_midiFile = new MidiFile();
 	_midiFile->Load(fname.c_str());
+	_txtFilename->SetLabel(fname);
 
 	_txtNumEvents->SetLabel(wxString::Format(_("Events: %d"), _midiFile->GetNumEvents()));
 	_txtNumTracks->SetLabel(wxString::Format(_("Tracks: %d"), _midiFile->GetNumTracks()));
 	_txtLoadedFile->SetLabel(wxString::Format(_("File: %s"), fname.c_str()));
 	_txtSize->SetLabel(wxString::Format(_("Size: %d"), _midiFile->GetSize()));
 	_txtType->SetLabel(wxString::Format(_("Type: %d"), _midiFile->GetType()));
+	_txtBPM->SetLabel(wxString::Format(_("BPM: %d"), (int)_midiFile->GetBPM()));
 	int ppqn = _midiFile->GetPPQN();
 	if( ppqn == 0 ) ppqn = 1;
 	_txtPPQN->SetLabel(wxString::Format(_("PPQN: %d"), ppqn));
@@ -252,9 +266,9 @@ void MidiPlayer::OnBrowse( wxCommandEvent& event )
 
 	for( int i = 0; i < _midiFile->GetNumTracks(); i++ )
 	{
-		//wxPanel* panel = new wxPanel(this, 0, 0, 480, 40);
+		//wxPanel* panel = new wxPanel(this, 0, 0, 620, 40);
 		MidiTrackPanel* panel = new MidiTrackPanel(this, -1);
-		panel->SetSize(480, 40);
+		panel->SetSize(620, 40);
 		panel->SetBackgroundColour(wxColour(((i+1) * 33) % 256, ((i + 1) * 49) % 256, ((i + 1) * 65) % 256));
 		MidiTrack* notes = _midiFile->GetTrackData(i);
 		for( std::list<MIDIEvent*>::iterator it = notes->_midiEvents.begin(); it != notes->_midiEvents.end(); it++ )
