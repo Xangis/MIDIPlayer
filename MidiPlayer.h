@@ -97,6 +97,7 @@ private:
 	bool _playing;		// Are we playing?
     int _outputChannel;
     int _midiOutputDeviceNumber;
+	double _numTicksElapsed;
     RtMidiOut* _midiOutDevice;
 #ifdef WIN32
 	LARGE_INTEGER _currtime;

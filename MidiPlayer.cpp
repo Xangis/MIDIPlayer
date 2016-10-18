@@ -24,6 +24,10 @@ MidiPlayer::MidiPlayer( )
 
 MidiPlayer::~MidiPlayer()
 {
+	_playing = false;
+	Pause();
+	// Give everything a chance to finish up.
+	Sleep(10);
 	if( _midiFile != NULL )
 	{
 		delete _midiFile;
@@ -80,7 +84,7 @@ bool MidiPlayer::Create( wxWindow* parent, wxWindowID id, const wxString& captio
 #ifdef __APPLE__
 	clock_get_time(_clock, &_currtime);
 #endif
-
+	Run();
 
     return true;
 }
@@ -261,9 +265,8 @@ void MidiPlayer::OnBrowse( wxCommandEvent& event )
 	}
 	_txtSongLength->SetLabel(wxString::Format(_("Length: %d:%02d"), minutes, seconds));
 
-	// TODO: Clear all tracks on load.
-	//_trackPanelSizer->DeleteWindows();
-
+	// Clear any existing tracks before adding new ones.
+	_trackPanelSizer->Clear(true);
 	for( int i = 0; i < _midiFile->GetNumTracks(); i++ )
 	{
 		//wxPanel* panel = new wxPanel(this, 0, 0, 620, 40);
@@ -290,9 +293,10 @@ void MidiPlayer::OnPlay( wxCommandEvent& event )
 	_mutex.Lock();
 	if( !_playing )
 	{
+        QueryPerformanceCounter( &_currtime );
+        QueryPerformanceCounter( &_lasttime );
 		_playing = true;
-		//_step = 0;
-		//_measure = 0;
+		_numTicksElapsed = 0.0;
 		_btnPlay->SetLabel(_("Stop"));
 	}
 	else
@@ -322,49 +326,34 @@ void* MidiPlayer::Entry( )
 	// LARGE_INTEGER difference, sum;
 	int counter = 0;
 	static int mutateMeasure = 0;
+
 	while( !TestDestroy())
 	{
 		_mutex.Lock();
-		if( _playing == true )
+		if( _playing == true && _midiFile != NULL )
 		{
+			// Get pulse length in milliseconds.
+			double pulseLength = _midiFile->GetPulseLength() * 1000.0;
+
 #ifdef WIN32
 			QueryPerformanceCounter( &_currtime );
-#endif
+			double elapsedMilliseconds = ((_currtime.QuadPart - _lasttime.QuadPart) * 1000.0) / (_tickspersec.QuadPart);
+			double ticks = elapsedMilliseconds / pulseLength;
+#else
 #ifdef linux
-                        clock_gettime(CLOCK_MONOTONIC, &_currtime);
+            clock_gettime(CLOCK_MONOTONIC, &_currtime);
 #endif
 #ifdef __APPLE__
 			clock_get_time(_clock, &_currtime);
 #endif
-			// BPM / 60 = Beats per second.
-			// Ticks per second / beats per second = ticks per beat.
-			// 1 beat = quarter note.
-			// We are treating each box as a beat, giving us 16 beats per pattern.  This makes
-			// it easy because 1 box = 1 step = 1 beat.  We can change the ratio later if need be.
-			//
-			// difference.QuadPart = (currtime.QuadPart - lasttime.QuadPart);
-			// sum.QuadPart = ((tickspersec.QuadPart * 60.0f ) / (float)bpm );
-			// if( difference.QuadPart > sum.QuadPart )
-
-			// Compensate for "swing" setting.
-			double nextNoteTime;
-			// Long note.
-			int bpm = 120;
-#ifdef WIN32
-			nextNoteTime = ((_tickspersec.QuadPart * 60.0f ) / (double)bpm);
-#else
-			// Working in nanoseconds on *NIX.
-			nextNoteTime = ( 60000000000.0f / (double)_bpm);
+            double oldNanoseconds = _lasttime.tv_sec * 1000000000.0 + _lasttime.tv_nsec;
+            double newNanoseconds = _currtime.tv_sec * 1000000000.0 + _currtime.tv_nsec;
+			double elapsedMilliseconds = (newNanoseconds - oldNanoseconds) / 1000000.0;
+			double ticks = elapsedMilliseconds / pulseLength;
 #endif
-
-#ifdef WIN32
-			if( (_currtime.QuadPart - _lasttime.QuadPart) > nextNoteTime )
-#else
-            double oldNS = _lasttime.tv_sec * 1000000000.0 + _lasttime.tv_nsec;
-            double newNS = _currtime.tv_sec * 1000000000.0 + _currtime.tv_nsec;
-			if( (newNS - oldNS) > nextNoteTime )
-#endif
+			if( abs(_numTicksElapsed + ticks) > abs(_numTicksElapsed) )
 			{
+				// TODO: Retrieve notes from file starting at pulse X.
 				if( _midiOutDevice )
 				{
                     // 00 (not used), 7F (velocity), 2B (note number), 9X (note on)+channel
@@ -373,14 +362,13 @@ void* MidiPlayer::Entry( )
 				}
 				// Set our time so we know when to play the next beat.
 				// By not adding the time it took us to actually play the beat we maintain timing consistency.
+				_numTicksElapsed += ticks;
 				_lasttime = _currtime;
 				_mutex.Unlock();
 			}
-			else
-			{
-				_mutex.Unlock();
-				Sleep(1);
-			}
+			_mutex.Unlock();
+			_numTicksElapsed += ticks;
+			Sleep(1);
 		}
 		else
 		{
