@@ -273,8 +273,9 @@ void MidiPlayer::OnBrowse( wxCommandEvent& event )
 		MidiTrackPanel* panel = new MidiTrackPanel(this, -1);
 		panel->SetSize(620, 40);
 		panel->SetBackgroundColour(wxColour(((i+1) * 33) % 256, ((i + 1) * 49) % 256, ((i + 1) * 65) % 256));
-		MidiTrack* notes = _midiFile->GetTrackData(i);
-		for( std::list<MIDIEvent*>::iterator it = notes->_midiEvents.begin(); it != notes->_midiEvents.end(); it++ )
+		MidiTrack* track = _midiFile->GetTrackData(i);
+		std::list<MIDIEvent*>* events = track->GetEvents();
+		for( std::list<MIDIEvent*>::iterator it = events->begin(); it != events->end(); it++ )
 		{
 			if( (*it)->message > 0x90 && (*it)->message < 0xA0 )
 			{
@@ -295,6 +296,10 @@ void MidiPlayer::OnPlay( wxCommandEvent& event )
 	{
         QueryPerformanceCounter( &_currtime );
         QueryPerformanceCounter( &_lasttime );
+		for( int i = 0; i < _midiFile->GetNumTracks(); i++ )
+		{
+			_midiFile->GetTrackData(i)->MoveToTick(0);
+		}
 		_playing = true;
 		_numTicksElapsed = 0.0;
 		_btnPlay->SetLabel(_("Stop"));
@@ -353,16 +358,28 @@ void* MidiPlayer::Entry( )
 #endif
 			if( abs(_numTicksElapsed + ticks) > abs(_numTicksElapsed) )
 			{
-				// TODO: Retrieve notes from file starting at pulse X.
-				if( _midiOutDevice )
+				for( int i = 0; i < _midiFile->GetNumTracks(); i++ )
 				{
-                    // 00 (not used), 7F (velocity), 2B (note number), 9X (note on)+channel
-                    //SendMidiMessage( 0, volume, midival[_drumControl[counter]->_drumNote], (144 + _outputChannel) );
-                    //SendMidiMessage( 0, volume, midival[_drumControl[counter]->_drumNote], (160 + _outputChannel) );
+					// TODO: Retrieve notes from file starting at pulse X.
+					std::list<MIDIEvent*> playableEvents = _midiFile->GetTrackData(i)->AdvanceToTick(_numTicksElapsed+ticks);
+					for( std::list<MIDIEvent*>::iterator iter = playableEvents.begin(); iter != playableEvents.end(); iter++ )
+					{
+						MIDIEvent* midiEvent = *iter;
+						// So far we only send note on and note off data.
+						if( midiEvent->message >= 144 && midiEvent->message < 176 )
+						{
+							printf("MIDI Note found.\n");
+							// 00 (not used), 7F (velocity), 2B (note number), 9X (note on)+channel
+							SendMidiMessage( 0, midiEvent->value2, midiEvent->value1, midiEvent->message );
+						}
+						else if( midiEvent->message >= 192 && midiEvent->message < 208 )
+						{
+							SendMidiMessage( 0, 0, midiEvent->value1, midiEvent->message );
+						}
+					}
+					// Set our time so we know when to play the next beat.
+					// By not adding the time it took us to actually play the beat we maintain timing consistency.
 				}
-				// Set our time so we know when to play the next beat.
-				// By not adding the time it took us to actually play the beat we maintain timing consistency.
-				_numTicksElapsed += ticks;
 				_lasttime = _currtime;
 				_mutex.Unlock();
 			}
@@ -377,4 +394,22 @@ void* MidiPlayer::Entry( )
 		}
 	}
 	return 0;
+}
+
+void MidiPlayer::SendMidiMessage(unsigned char byte1, unsigned char byte2, unsigned char byte3, unsigned char byte4, bool shortmsg)
+{
+    std::vector<unsigned char> msg;
+    msg.push_back(byte4);
+    msg.push_back(byte3);
+    if(!shortmsg && _midiOutDevice != NULL)
+    {
+      msg.push_back(byte2);
+      if( byte1 != 0 )
+      {
+        msg.push_back(byte1);
+      }
+#ifndef VST
+      _midiOutDevice->sendMessage(&msg);
+#endif
+    }
 }

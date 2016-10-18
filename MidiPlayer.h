@@ -74,6 +74,7 @@ public:
 	void *Entry();
 	void SelectMidiOutputDevice(int number);
 	void SelectMidiOutputChannel(int number);
+    void SendMidiMessage( unsigned char byte1, unsigned char byte2, unsigned char byte3, unsigned char byte4, bool shortmsg = false );
 private:
 	wxMutex _mutex;
 	wxIcon _icon;
