@@ -177,7 +177,7 @@ void MidiPlayer::CreateControls()
 	_txtLoadedFile = new wxStaticText(itemDialog1, ID_TXT_LOADEDFILE, _("File:"), wxDefaultPosition, wxSize(320, -1));
 	itemBoxSizer5->Add(_txtLoadedFile, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-	_txtSongLength = new wxStaticText(itemDialog1, ID_TXT_LENGTH, _("Length:"), wxDefaultPosition, wxSize(100, -1));
+	_txtSongLength = new wxStaticText(itemDialog1, ID_TXT_LENGTH, _("Length:"), wxDefaultPosition, wxSize(200, -1));
 	itemBoxSizer5->Add(_txtSongLength, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
 	wxBoxSizer* itemBoxSizer6 = new wxBoxSizer(wxHORIZONTAL);
@@ -269,6 +269,7 @@ void MidiPlayer::OnBrowse( wxCommandEvent& event )
 	_txtPPQN->SetLabel(wxString::Format(_("PPQN: %d"), ppqn));
 
 	int length = _midiFile->GetLength();
+	int ticks = _midiFile->GetLengthInTicks();
 	int seconds = 0;
 	int minutes = 0;
 	if( length >= 0 )
@@ -276,7 +277,7 @@ void MidiPlayer::OnBrowse( wxCommandEvent& event )
 		seconds = length % 60;
 		minutes = length / 60;
 	}
-	_txtSongLength->SetLabel(wxString::Format(_("Length: %d:%02d"), minutes, seconds));
+	_txtSongLength->SetLabel(wxString::Format(_("Length: %d:%02d (%d ticks)"), minutes, seconds, ticks));
 
 	// Clear any existing tracks before adding new ones.
 	_trackPanelSizer->Clear(true);
