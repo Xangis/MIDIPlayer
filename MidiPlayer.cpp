@@ -106,16 +106,16 @@ void MidiPlayer::CreateControls()
 	itemBoxSizer2->Add(itemBoxSizer4, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
 	_btnPlay = new wxButton(itemDialog1, ID_BTN_PLAY, _("Play"));
-	itemBoxSizer4->Add(_btnPlay, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+	itemBoxSizer4->Add(_btnPlay, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 	//_btnStop = new wxButton(itemDialog1, ID_BTN_STOP, _("Stop"));
-	//itemBoxSizer4->Add(_btnStop, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+	//itemBoxSizer4->Add(_btnStop, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 	_btnExit = new wxButton(itemDialog1, ID_BTN_EXIT, _("Exit"));
-	itemBoxSizer4->Add(_btnExit, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+	itemBoxSizer4->Add(_btnExit, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 	_btnInfo = new wxButton(itemDialog1, ID_BTN_INFO, _("Info"));
-	itemBoxSizer4->Add(_btnInfo, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+	itemBoxSizer4->Add(_btnInfo, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 	wxBoxSizer* itemBoxSizer25 = new wxBoxSizer(wxHORIZONTAL);
 	itemBoxSizer2->Add(itemBoxSizer25, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
@@ -160,13 +160,13 @@ void MidiPlayer::CreateControls()
     itemBoxSizer2->Add(itemBoxSizer3, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
     wxStaticText* itemStaticText11 = new wxStaticText( itemDialog1, wxID_STATIC, _("File:"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer3->Add(itemStaticText11, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemBoxSizer3->Add(itemStaticText11, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 	_txtFilename = new wxTextCtrl(itemDialog1, ID_TXT_FILENAME, _(""), wxDefaultPosition, wxSize(460, -1));
-	itemBoxSizer3->Add(_txtFilename, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+	itemBoxSizer3->Add(_txtFilename, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 	_btnBrowse = new wxButton(itemDialog1, ID_BTN_BROWSE, _("Browse"));
-	itemBoxSizer3->Add(_btnBrowse, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+	itemBoxSizer3->Add(_btnBrowse, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 	_trackPanelSizer = new wxBoxSizer(wxVERTICAL);
 	itemBoxSizer2->Add(_trackPanelSizer, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
@@ -175,31 +175,31 @@ void MidiPlayer::CreateControls()
 	itemBoxSizer2->Add(itemBoxSizer5, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
 	_txtLoadedFile = new wxStaticText(itemDialog1, ID_TXT_LOADEDFILE, _("File:"), wxDefaultPosition, wxSize(320, -1));
-	itemBoxSizer5->Add(_txtLoadedFile, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+	itemBoxSizer5->Add(_txtLoadedFile, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 	_txtSongLength = new wxStaticText(itemDialog1, ID_TXT_LENGTH, _("Length:"), wxDefaultPosition, wxSize(200, -1));
-	itemBoxSizer5->Add(_txtSongLength, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+	itemBoxSizer5->Add(_txtSongLength, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 	wxBoxSizer* itemBoxSizer6 = new wxBoxSizer(wxHORIZONTAL);
 	itemBoxSizer2->Add(itemBoxSizer6, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
 	_txtNumEvents = new wxStaticText(itemDialog1, ID_TXT_NUMEVENTS, _("Events:"), wxDefaultPosition, wxSize(100, -1));
-	itemBoxSizer6->Add(_txtNumEvents, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+	itemBoxSizer6->Add(_txtNumEvents, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 	_txtNumTracks = new wxStaticText(itemDialog1, ID_TXT_NUMTRACKS, _("Tracks:"), wxDefaultPosition, wxSize(100, -1));
-	itemBoxSizer6->Add(_txtNumTracks, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+	itemBoxSizer6->Add(_txtNumTracks, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 	_txtSize = new wxStaticText(itemDialog1, ID_TXT_SIZE, _("Size:"), wxDefaultPosition, wxSize(100, -1));
-	itemBoxSizer6->Add(_txtSize, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+	itemBoxSizer6->Add(_txtSize, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 	_txtType = new wxStaticText(itemDialog1, ID_TXT_TYPE, _("Type:"), wxDefaultPosition, wxSize(100, -1));
-	itemBoxSizer6->Add(_txtType, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+	itemBoxSizer6->Add(_txtType, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 	_txtPPQN = new wxStaticText(itemDialog1, ID_TXT_TYPE, _("PPQN:"), wxDefaultPosition, wxSize(100, -1));
-	itemBoxSizer6->Add(_txtPPQN, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+	itemBoxSizer6->Add(_txtPPQN, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 	_txtBPM = new wxStaticText(itemDialog1, ID_TXT_TYPE, _("BPM:"), wxDefaultPosition, wxSize(100, -1));
-	itemBoxSizer6->Add(_txtBPM, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+	itemBoxSizer6->Add(_txtBPM, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     //wxBoxSizer* itemBoxSizer12 = new wxBoxSizer(wxHORIZONTAL);
     //itemBoxSizer2->Add(itemBoxSizer12, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
@@ -308,8 +308,19 @@ void MidiPlayer::OnPlay( wxCommandEvent& event )
 	_mutex.Lock();
 	if( !_playing )
 	{
-        QueryPerformanceCounter( &_currtime );
-        QueryPerformanceCounter( &_lasttime );
+
+#ifdef WIN32
+            QueryPerformanceCounter( &_currtime );
+            QueryPerformanceCounter( &_lasttime );
+#endif
+#ifdef linux
+            clock_gettime(CLOCK_MONOTONIC, &_currtime);
+            clock_gettime(CLOCK_MONOTONIC, &_lasttime);
+#endif
+#ifdef __APPLE__
+            clock_get_time(_clock, &_currtime);
+            clock_get_time(_clock, &_lasttime);
+#endif
 		for( int i = 0; i < _midiFile->GetNumTracks(); i++ )
 		{
 			_midiFile->GetTrackData(i)->MoveToTick(0);
@@ -370,7 +381,7 @@ void* MidiPlayer::Entry( )
 			double elapsedMilliseconds = (newNanoseconds - oldNanoseconds) / 1000000.0;
 			double ticks = elapsedMilliseconds / pulseLength;
 #endif
-			if( abs(_numTicksElapsed + ticks) > abs(_numTicksElapsed) )
+			if( (int)(_numTicksElapsed + ticks) > (int)(_numTicksElapsed) )
 			{
 				for( int i = 0; i < _midiFile->GetNumTracks(); i++ )
 				{

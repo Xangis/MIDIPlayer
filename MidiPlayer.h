@@ -42,7 +42,6 @@
 #define ID_MIDI_DEVICE 10011
 #define ID_TXT_SIZE 10012
 #define ID_TXT_TYPE 10013
-#define ID_MIDI_DEVICE 10014
 
 /*!
  * Compatibility
