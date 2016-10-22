@@ -179,7 +179,8 @@ void MidiPlayer::CreateControls()
 	wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxHORIZONTAL);
 	itemBoxSizer2->Add(itemBoxSizer5, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-	_txtTimeElapsed = new wxStaticText(itemDialog1, ID_TXT_TIME_ELAPSED, _("Time: 0:00.000"), wxDefaultPosition, wxSize(120, -1));
+	//_txtTimeElapsed = new wxStaticText(itemDialog1, ID_TXT_TIME_ELAPSED, _("Time: 0:00.000"), wxDefaultPosition, wxSize(120, -1));
+	_txtTimeElapsed = new wxStaticText(itemDialog1, ID_TXT_TIME_ELAPSED, _("Time: 0:00"), wxDefaultPosition, wxSize(120, -1));
 	itemBoxSizer5->Add(_txtTimeElapsed, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 	_txtSongLength = new wxStaticText(itemDialog1, ID_TXT_LENGTH, _("Length:"), wxDefaultPosition, wxSize(200, -1));
@@ -356,7 +357,8 @@ void MidiPlayer::OnPlay( wxCommandEvent& event )
 		}
 		_numTicksElapsed = 0.0;
         _numMsecElapsed = 0.0;
-        _txtTimeElapsed->SetLabel("Time: 0:00.000");
+        //_txtTimeElapsed->SetLabel("Time: 0:00.000");
+        _txtTimeElapsed->SetLabel("Time: 0:00");
 		_playing = true;
 		_btnPlay->SetLabel(_("Stop"));
 	}
@@ -395,7 +397,8 @@ void MidiPlayer::OnTime( wxCommandEvent& event )
     int milliseconds = (int)time % 1000;
     int minutes = seconds / 60;
     seconds = seconds % 60;
-    _txtTimeElapsed->SetLabel(wxString::Format(_("Time: %d:%02d.%03d"), minutes, seconds, milliseconds));
+    ///_txtTimeElapsed->SetLabel(wxString::Format(_("Time: %d:%02d.%03d"), minutes, seconds, milliseconds));
+    _txtTimeElapsed->SetLabel(wxString::Format(_("Time: %d:%02d"), minutes, seconds));
 }
 
 void MidiPlayer::OnExit( wxCommandEvent& event )
@@ -460,27 +463,25 @@ void* MidiPlayer::Entry( )
 							printf("Not sure what to do with message %d.\n", midiEvent->message );
 						}
 					}
-					// Set our time so we know when to play the next beat.
-					// By not adding the time it took us to actually play the beat we maintain timing consistency.
 				}
+				// Only update the time when we've processed events (increased the number of ticks).
 				_lasttime = _currtime;
-				_mutex.Unlock();
+			    _numTicksElapsed += ticks;
+                _numMsecElapsed += elapsedMilliseconds;
+                // Send a time update event once per second.
+                if( (int)((_numMsecElapsed - elapsedMilliseconds) / 1000.0) < (int)(_numMsecElapsed / 1000.0)) 
+                {
+                    wxCommandEvent* evt = new wxCommandEvent(wxEVT_COMMAND_BUTTON_CLICKED, ID_BTN_TIME);
+                    QueueEvent(evt);
+                }
 			}
-			_numTicksElapsed += ticks;
-            _numMsecElapsed += elapsedMilliseconds;
-            // Send a time update event once per second.
-            if( (int)((_numMsecElapsed - elapsedMilliseconds) / 1000.0) < (int)(_numMsecElapsed / 1000.0)) 
-            {
-                wxCommandEvent* evt = new wxCommandEvent(wxEVT_COMMAND_BUTTON_CLICKED, ID_BTN_TIME);
-                QueueEvent(evt);
-            }
-			_mutex.Unlock();
             // When the song is finished playing, auto-stop.
 			if( _playing && _numTicksElapsed > _midiFile->GetLengthInTicks() )
             {
                 wxCommandEvent* evt = new wxCommandEvent(wxEVT_COMMAND_BUTTON_CLICKED, ID_BTN_STOP);
                 QueueEvent(evt);
             }
+            _mutex.Unlock();
 			Sleep(1);
 		}
 		else
