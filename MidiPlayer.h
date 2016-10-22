@@ -43,6 +43,8 @@
 #define ID_TXT_SIZE 10012
 #define ID_TXT_TYPE 10013
 #define ID_BTN_SAVE 10014
+#define ID_BTN_TIME 10015
+#define ID_TXT_TIME_ELAPSED 10016
 
 /*!
  * Compatibility
@@ -73,6 +75,7 @@ public:
 	void OnSave( wxCommandEvent& event );
 	void OnStop( wxCommandEvent& event );
 	void OnExit( wxCommandEvent& event );
+	void OnTime( wxCommandEvent& event );
 	void *Entry();
 	void SelectMidiOutputDevice(int number);
 	void SelectMidiOutputChannel(int number);
@@ -93,18 +96,19 @@ private:
 	wxTextCtrl* _txtFilename;
 	wxStaticText* _txtNumEvents;
 	wxStaticText* _txtNumTracks;
-	wxStaticText* _txtLoadedFile;
 	wxStaticText* _txtSongLength;
 	wxStaticText* _txtSize;
 	wxStaticText* _txtType;
 	wxStaticText* _txtPPQN;
 	wxStaticText* _txtBPM;
+    wxStaticText* _txtTimeElapsed;
 	std::list<wxPanel*> _trackPanels;
 	wxSizer* _trackPanelSizer;
 	bool _playing;		// Are we playing?
     int _outputChannel;
     int _midiOutputDeviceNumber;
 	double _numTicksElapsed;
+    double _numMsecElapsed;
     RtMidiOut* _midiOutDevice;
 #ifdef WIN32
 	LARGE_INTEGER _currtime;
