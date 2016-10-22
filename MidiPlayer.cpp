@@ -13,6 +13,7 @@ BEGIN_EVENT_TABLE( MidiPlayer, wxDialog )
 	EVT_BUTTON( ID_BTN_INFO, MidiPlayer::OnInfo )
 	EVT_BUTTON( ID_BTN_BROWSE, MidiPlayer::OnBrowse )
 	EVT_BUTTON( ID_BTN_PLAY, MidiPlayer::OnPlay )
+	EVT_BUTTON( ID_BTN_SAVE, MidiPlayer::OnSave )
 	//EVT_BUTTON( ID_BTN_STOP, MidiPlayer::OnStop )
 	EVT_BUTTON( ID_BTN_EXIT, MidiPlayer::OnExit )
 END_EVENT_TABLE()
@@ -116,6 +117,9 @@ void MidiPlayer::CreateControls()
 
 	_btnInfo = new wxButton(itemDialog1, ID_BTN_INFO, _("Info"));
 	itemBoxSizer4->Add(_btnInfo, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+	_btnSave = new wxButton(itemDialog1, ID_BTN_SAVE, _("Save"));
+	itemBoxSizer4->Add(_btnSave, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 	wxBoxSizer* itemBoxSizer25 = new wxBoxSizer(wxHORIZONTAL);
 	itemBoxSizer2->Add(itemBoxSizer25, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
@@ -235,6 +239,25 @@ void MidiPlayer::OnInfo( wxCommandEvent& event )
     event.Skip();
 }
 
+void MidiPlayer::OnSave( wxCommandEvent& event )
+{
+	wxString path = wxString::Format( _("%s%s"), "test", _txtFilename->GetLabel() );
+	wxFileDialog fdialog( this, _("Save MIDI File"), path, _(""), _("MIDI Files (*.mid) |*.mid||"), wxFD_SAVE );
+
+	wxString filename;
+
+	if( fdialog.ShowModal() != wxID_OK )
+	{
+		return;
+	}
+
+	wxString fname = fdialog.GetPath();
+
+	_midiFile->Save(fname.c_str());
+
+    event.Skip();
+}
+
 void MidiPlayer::OnBrowse( wxCommandEvent& event )
 {
 	wxString path = _(".\\");
@@ -287,13 +310,14 @@ void MidiPlayer::OnBrowse( wxCommandEvent& event )
 		MidiTrackPanel* panel = new MidiTrackPanel(this, -1);
 		panel->SetSize(620, 40);
 		panel->SetBackgroundColour(wxColour(((i+1) * 33) % 256, ((i + 1) * 49) % 256, ((i + 1) * 65) % 256));
+        panel->SetLengthInTicks(ticks);
 		MidiTrack* track = _midiFile->GetTrackData(i);
 		std::list<MIDIEvent*>* events = track->GetEvents();
 		for( std::list<MIDIEvent*>::iterator it = events->begin(); it != events->end(); it++ )
 		{
 			if( (*it)->message > 0x90 && (*it)->message < 0xA0 )
 			{
-				panel->AddMidiNote( (*it)->absoluteTime / ppqn, (*it)->value1 );
+				panel->AddMidiNote( (*it)->absoluteTime, (*it)->value1 );
 			}
 		}
 		_trackPanelSizer->Add(panel);

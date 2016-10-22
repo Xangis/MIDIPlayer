@@ -42,6 +42,7 @@
 #define ID_MIDI_DEVICE 10011
 #define ID_TXT_SIZE 10012
 #define ID_TXT_TYPE 10013
+#define ID_BTN_SAVE 10014
 
 /*!
  * Compatibility
@@ -69,6 +70,7 @@ public:
 	void OnInfo( wxCommandEvent& event );
 	void OnBrowse( wxCommandEvent& event );
 	void OnPlay( wxCommandEvent& event );
+	void OnSave( wxCommandEvent& event );
 	//void OnStop( wxCommandEvent& event );
 	void OnExit( wxCommandEvent& event );
 	void *Entry();
@@ -84,6 +86,7 @@ private:
 	wxButton* _btnPlay;
 	wxButton* _btnExit;
 	wxButton* _btnBrowse;
+	wxButton* _btnSave; // Temporary, for MidiFile code testing.
 	//wxButton* _btnStop;
 	wxButton* _btnInfo;
 	wxChoice* _device;

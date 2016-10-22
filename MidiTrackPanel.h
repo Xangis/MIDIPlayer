@@ -17,6 +17,7 @@ public:
     void Create( wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, const wxSize &size = wxSize(620, 40), long style = 0 );
 	void OnPaint( wxPaintEvent& event );
 	void AddMidiNote(int time, int note);
+    void SetLengthInTicks(int length) { _trackLength = length; };
 	DECLARE_EVENT_TABLE()
 private:
 	int _trackLength;
