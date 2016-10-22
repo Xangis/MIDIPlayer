@@ -71,7 +71,7 @@ public:
 	void OnBrowse( wxCommandEvent& event );
 	void OnPlay( wxCommandEvent& event );
 	void OnSave( wxCommandEvent& event );
-	//void OnStop( wxCommandEvent& event );
+	void OnStop( wxCommandEvent& event );
 	void OnExit( wxCommandEvent& event );
 	void *Entry();
 	void SelectMidiOutputDevice(int number);

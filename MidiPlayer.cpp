@@ -14,7 +14,7 @@ BEGIN_EVENT_TABLE( MidiPlayer, wxDialog )
 	EVT_BUTTON( ID_BTN_BROWSE, MidiPlayer::OnBrowse )
 	EVT_BUTTON( ID_BTN_PLAY, MidiPlayer::OnPlay )
 	EVT_BUTTON( ID_BTN_SAVE, MidiPlayer::OnSave )
-	//EVT_BUTTON( ID_BTN_STOP, MidiPlayer::OnStop )
+	EVT_BUTTON( ID_BTN_STOP, MidiPlayer::OnStop )
 	EVT_BUTTON( ID_BTN_EXIT, MidiPlayer::OnExit )
 END_EVENT_TABLE()
 
@@ -354,8 +354,8 @@ void MidiPlayer::OnPlay( wxCommandEvent& event )
 		{
 			_midiFile->GetTrackData(i)->MoveToTick(0);
 		}
-		_playing = true;
 		_numTicksElapsed = 0.0;
+		_playing = true;
 		_btnPlay->SetLabel(_("Stop"));
 	}
 	else
@@ -368,10 +368,18 @@ void MidiPlayer::OnPlay( wxCommandEvent& event )
     event.Skip();
 }
 
-//void MidiPlayer::OnStop( wxCommandEvent& event )
-//{
-//    event.Skip();
-//}
+/**
+* Stops playback. There's not a button for this, instead this exists to handle stop
+* events posted by the playback thread reaching the end of the song.
+*/
+void MidiPlayer::OnStop( wxCommandEvent& event )
+{
+	_mutex.Lock();
+	_playing = false;
+	_btnPlay->SetLabel(_("Play"));
+	_mutex.Unlock();
+    AllNotesOff();
+}
 
 void MidiPlayer::OnExit( wxCommandEvent& event )
 {
@@ -443,15 +451,12 @@ void* MidiPlayer::Entry( )
 			}
 			_mutex.Unlock();
 			_numTicksElapsed += ticks;
-			// TODO: When the song is finished playing, indicate that playing has stopped
-			// (change the play button, etc)
-			//if( _playing && _numTicksElapsed > _midiFile->GetLengthInTicks() )
-			//{
-			//	wxCommandEvent evt;
-			//	//evt.SetId(ID_BTN_PLAY);
-			//	this->GetEventHandler()->AddPendingEvent(evt);
-			//	_btnPlay->GetEventHandler()->AddPendingEvent(evt);
-			//}
+            // When the song is finish playing, auto-stop.
+			if( _playing && _numTicksElapsed > _midiFile->GetLengthInTicks() )
+            {
+                wxCommandEvent* evt = new wxCommandEvent(wxEVT_COMMAND_BUTTON_CLICKED, ID_BTN_STOP);
+                QueueEvent(evt);
+            }
 			Sleep(1);
 		}
 		else
