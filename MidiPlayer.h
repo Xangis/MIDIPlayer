@@ -81,6 +81,7 @@ public:
 	void SelectMidiOutputChannel(int number);
 	void OnChangeMidiDevice( wxCommandEvent& event );
 	void AllNotesOff();
+    void LoadFile(wxString& filename);
     void SendMidiMessage( unsigned char byte1, unsigned char byte2, unsigned char byte3, unsigned char byte4, bool shortmsg = false );
 private:
 	wxMutex _mutex;

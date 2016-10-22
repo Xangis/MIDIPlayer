@@ -275,13 +275,19 @@ void MidiPlayer::OnBrowse( wxCommandEvent& event )
 
 	wxString value;
 	wxString fname = fdialog.GetPath();
-	if( _midiFile != NULL )
+    LoadFile(fname);
+    event.Skip();
+}
+
+void MidiPlayer::LoadFile(wxString& filename)
+{
+    if( _midiFile != NULL )
 	{
 		delete _midiFile;
 	}
 	_midiFile = new MidiFile();
-	_midiFile->Load(fname.c_str());
-	_txtFilename->SetLabel(fname);
+	_midiFile->Load(filename.c_str());
+	_txtFilename->SetLabel(filename);
 
 	_txtNumEvents->SetLabel(wxString::Format(_("Events: %d"), _midiFile->GetNumEvents()));
 	_txtNumTracks->SetLabel(wxString::Format(_("Tracks: %d"), _midiFile->GetNumTracks()));
@@ -329,8 +335,6 @@ void MidiPlayer::OnBrowse( wxCommandEvent& event )
 		_trackPanelSizer->Add(panel);
 	}
 	Fit();
-
-	event.Skip();
 }
 
 void MidiPlayer::OnPlay( wxCommandEvent& event )
@@ -338,6 +342,8 @@ void MidiPlayer::OnPlay( wxCommandEvent& event )
 	_mutex.Lock();
 	if( !_playing )
 	{
+        if( _midiFile != NULL )
+        {
 
 #ifdef WIN32
             QueryPerformanceCounter( &_currtime );
@@ -351,16 +357,17 @@ void MidiPlayer::OnPlay( wxCommandEvent& event )
             clock_get_time(_clock, &_currtime);
             clock_get_time(_clock, &_lasttime);
 #endif
-		for( int i = 0; i < _midiFile->GetNumTracks(); i++ )
-		{
-			_midiFile->GetTrackData(i)->MoveToTick(0);
-		}
-		_numTicksElapsed = 0.0;
-        _numMsecElapsed = 0.0;
-        //_txtTimeElapsed->SetLabel("Time: 0:00.000");
-        _txtTimeElapsed->SetLabel("Time: 0:00");
-		_playing = true;
-		_btnPlay->SetLabel(_("Stop"));
+		    for( int i = 0; i < _midiFile->GetNumTracks(); i++ )
+		    {
+			    _midiFile->GetTrackData(i)->MoveToTick(0);
+		    }
+		    _numTicksElapsed = 0.0;
+            _numMsecElapsed = 0.0;
+            //_txtTimeElapsed->SetLabel("Time: 0:00.000");
+            _txtTimeElapsed->SetLabel("Time: 0:00");
+		    _playing = true;
+		    _btnPlay->SetLabel(_("Stop"));
+        }
 	}
 	else
 	{

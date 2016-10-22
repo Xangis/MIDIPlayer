@@ -41,6 +41,13 @@ bool MidiPlayerApp::OnInit()
     // to make permanent changes to the code.
     wxInitAllImageHandlers();
     MidiPlayer* mainWindow = new MidiPlayer(NULL, ID_KEYBOARD_DLG );
+    if( this->argc > 1 )
+    {
+        wxString param = this->argv[1];
+        mainWindow->LoadFile(param);
+        wxCommandEvent* evt = new wxCommandEvent(wxEVT_COMMAND_BUTTON_CLICKED, ID_BTN_PLAY);
+        mainWindow->GetEventHandler()->QueueEvent(evt);
+    }
     mainWindow->Show(true);
 
     return true;
