@@ -16,7 +16,7 @@ DefaultDirName={pf}\Zeta Centauri\MidiPlayer
 DefaultGroupName=Zeta Centauri\MidiPlayer
 LicenseFile=C:\Users\Xangis\code\MidiPlayer\installer\License.txt
 OutputDir=C:\Users\Xangis\code\MidiPlayer\Installer
-OutputBaseFilename=MidiPlayer2.0Setup
+OutputBaseFilename=MidiPlayer2Setup
 SetupIconFile=C:\Users\Xangis\code\MidiPlayer\keyicon.ico
 UninstallDisplayIcon={app}\keyicon.ico
 Compression=lzma
@@ -30,7 +30,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\Xangis\code\MidiPlayer\Debug\MidiPlayer.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\Xangis\code\MidiPlayer\Release\MidiPlayer.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\Xangis\code\MidiPlayer\keyicon.ico"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: "C:\Users\Xangis\code\MidiPlayer\installer\vcredist2010_x86.exe"; DestDir: "{app}"; Flags: ignoreversion deleteafterinstall
@@ -40,6 +40,11 @@ Name: "{group}\MidiPlayer"; Filename: "{app}\MidiPlayer.exe"; WorkingDir: "{app}
 Name: "{group}\{cm:ProgramOnTheWeb,MidiPlayer}"; Filename: "http://zetacentauri.com/software_midiplayer.htm"
 Name: "{commondesktop}\MidiPlayer"; Filename: "{app}\MidiPlayer.exe"; Tasks: desktopicon; WorkingDir: "{app}"
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\MidiPlayer"; Filename: "{app}\MidiPlayer.exe"; Tasks: quicklaunchicon; WorkingDir: "{app}"
+
+[Registry]
+Root: HKCR; Subkey: ".mid"; ValueType: string; ValueName: ""; ValueData: "MidiPlayerMIDIFile"; Flags: uninsdeletevalue
+Root: HKCR; Subkey: "MidiPlayerMIDIFile"; ValueType: string; ValueName: ""; ValueData: "MIDI File"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "MidiPlayerMIDIFile\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\MidiPlayer.exe"" ""%1"""
 
 [Run]
 Filename: "{app}\vcredist2010_x86.exe"; Parameters: "/q"; WorkingDir: "{app}";  StatusMsg: "Installing Visual C++ 2010 Redistributable..."; Flags: waituntilterminated
