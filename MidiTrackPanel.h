@@ -18,10 +18,12 @@ public:
 	void OnPaint( wxPaintEvent& event );
 	void AddMidiNote(int time, int note);
     void SetLengthInTicks(int length) { _trackLength = length; };
+    void SetTrackTitle(wxString& title) { _trackTitle = title; };
 	DECLARE_EVENT_TABLE()
 private:
 	int _trackLength;
 	std::list<std::pair< int, int > > _midiNotes;
+    wxString _trackTitle;
 };
 
 #endif

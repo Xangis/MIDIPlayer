@@ -311,6 +311,11 @@ void MidiPlayer::OnBrowse( wxCommandEvent& event )
 		panel->SetSize(620, 40);
 		panel->SetBackgroundColour(wxColour(((i+1) * 33) % 256, ((i + 1) * 49) % 256, ((i + 1) * 65) % 256));
         panel->SetLengthInTicks(ticks);
+        const unsigned char* title = _midiFile->GetTrackData(i)->GetTitle();
+        if( title != NULL )
+        {
+            panel->SetTrackTitle(wxString(title));
+        }
 		MidiTrack* track = _midiFile->GetTrackData(i);
 		std::list<MIDIEvent*>* events = track->GetEvents();
 		for( std::list<MIDIEvent*>::iterator it = events->begin(); it != events->end(); it++ )
