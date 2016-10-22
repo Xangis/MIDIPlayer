@@ -9,6 +9,7 @@ END_EVENT_TABLE()
 MidiTrackPanel::MidiTrackPanel()
 {
     _trackLength = -1;
+    _playbackTick = -1;
 }
 
 MidiTrackPanel::~MidiTrackPanel()
@@ -20,11 +21,18 @@ void MidiTrackPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint &pos,
     wxPanel::Create( parent, id, pos, size, style );
 }
 
+void MidiTrackPanel::SetPlaybackTick(int tick)
+{
+    _playbackTick = tick;
+    Refresh();
+}
+
 void MidiTrackPanel::OnPaint( wxPaintEvent& event )
 {
     // Draw the image if we have one, otherwise draw a default graphic.
     wxPaintDC dc(this);
 	dc.SetBrush(*wxWHITE_BRUSH);
+    dc.SetPen(*wxBLACK_PEN);
     int width = GetSize().GetWidth();
 	for( std::list<std::pair<int, int> >::iterator it = _midiNotes.begin(); it != _midiNotes.end(); it++ )
 	{
@@ -39,6 +47,12 @@ void MidiTrackPanel::OnPaint( wxPaintEvent& event )
             dc.SetTextForeground(*wxWHITE);
             dc.DrawText(_trackTitle, 2, 21);
         }
+    }
+    if( _playbackTick > 0 )
+    {
+        dc.SetPen(*wxGREY_PEN);
+        int linePos = (_playbackTick * width) / _trackLength;
+        dc.DrawLine(linePos, 0, linePos, GetSize().GetHeight());
     }
 	event.Skip(false);
 }

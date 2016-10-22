@@ -316,7 +316,9 @@ void MidiPlayer::LoadFile(wxString& filename)
 		//wxPanel* panel = new wxPanel(this, 0, 0, 620, 40);
 		MidiTrackPanel* panel = new MidiTrackPanel(this, -1);
 		panel->SetSize(620, 40);
-		panel->SetBackgroundColour(wxColour(((i+1) * 33) % 256, ((i + 1) * 49) % 256, ((i + 1) * 65) % 256));
+        int colorIterator = i;
+        if( colorIterator >= 4 ) { colorIterator++; }
+		panel->SetBackgroundColour(wxColour(((colorIterator+1) * 33) % 128, ((colorIterator + 1) * 43) % 224, ((colorIterator + 1) * 65) % 224));
         panel->SetLengthInTicks(ticks);
         const unsigned char* title = _midiFile->GetTrackData(i)->GetTitle();
         if( title != NULL )
@@ -398,7 +400,8 @@ void MidiPlayer::OnStop( wxCommandEvent& event )
 void MidiPlayer::OnTime( wxCommandEvent& event )
 {
     _mutex.Lock();
-    double time = this->_numMsecElapsed;
+    double time = _numMsecElapsed;
+    double tick = _numTicksElapsed;
     _mutex.Unlock();
     int seconds = time / 1000.0;
     int milliseconds = (int)time % 1000;
@@ -406,6 +409,19 @@ void MidiPlayer::OnTime( wxCommandEvent& event )
     seconds = seconds % 60;
     ///_txtTimeElapsed->SetLabel(wxString::Format(_("Time: %d:%02d.%03d"), minutes, seconds, milliseconds));
     _txtTimeElapsed->SetLabel(wxString::Format(_("Time: %d:%02d"), minutes, seconds));
+    if( _midiFile != NULL )
+    {
+        wxSizerItemList list = _trackPanelSizer->GetChildren();
+        for( int i = 0; i < list.size(); i++ )
+        {
+            wxWindow* window = list[i]->GetWindow();
+            MidiTrackPanel* panel = dynamic_cast<MidiTrackPanel*>(window);
+            if( panel != NULL )
+            {
+                panel->SetPlaybackTick(tick);
+            }
+        }
+    }
 }
 
 void MidiPlayer::OnExit( wxCommandEvent& event )
