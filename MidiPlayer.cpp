@@ -401,6 +401,10 @@ void* MidiPlayer::Entry( )
 						{
 							SendMidiMessage( 0, 0, midiEvent->value1, midiEvent->message );
 						}
+						else
+						{
+							printf("Not sure what to do with message %d.\n", midiEvent->message );
+						}
 					}
 					// Set our time so we know when to play the next beat.
 					// By not adding the time it took us to actually play the beat we maintain timing consistency.
@@ -410,6 +414,15 @@ void* MidiPlayer::Entry( )
 			}
 			_mutex.Unlock();
 			_numTicksElapsed += ticks;
+			// TODO: When the song is finished playing, indicate that playing has stopped
+			// (change the play button, etc)
+			//if( _playing && _numTicksElapsed > _midiFile->GetLengthInTicks() )
+			//{
+			//	wxCommandEvent evt;
+			//	//evt.SetId(ID_BTN_PLAY);
+			//	this->GetEventHandler()->AddPendingEvent(evt);
+			//	_btnPlay->GetEventHandler()->AddPendingEvent(evt);
+			//}
 			Sleep(1);
 		}
 		else
