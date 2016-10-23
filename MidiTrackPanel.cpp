@@ -63,13 +63,13 @@ void MidiTrackPanel::GenerateBitmap()
             timePos = ((*it).first * width) / _trackLength;
         }
 		dc.DrawRectangle(timePos, ((*it).second * 35)/127, 3, 3);
-        if( _trackTitle.length() > 0 )
-        {
-            wxFont font = wxFont(9, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-            dc.SetFont(font);
-            dc.SetTextForeground(*wxWHITE);
-            dc.DrawText(_trackTitle, 2, 21);
-        }
+    }
+    if( _trackTitle.length() > 0 )
+    {
+        wxFont font = wxFont(9, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+        dc.SetFont(font);
+        dc.SetTextForeground(*wxWHITE);
+        dc.DrawText(_trackTitle, 2, 21);
     }
     dc.SelectObject(wxNullBitmap);
     _bitmapValid = true;
