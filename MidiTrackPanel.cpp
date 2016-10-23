@@ -41,7 +41,7 @@ void MidiTrackPanel::OnPaint( wxPaintEvent& event )
         {
             timePos = ((*it).first * width) / _trackLength;
         }
-		dc.DrawRectangle(timePos, ((*it).second * 35)/127, 5, 5);
+		dc.DrawRectangle(timePos, ((*it).second * 35)/127, 4, 4);
         if( _trackTitle.length() > 0 )
         {
             dc.SetTextForeground(*wxWHITE);

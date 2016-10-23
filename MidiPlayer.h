@@ -72,9 +72,9 @@ public:
 	void OnInfo( wxCommandEvent& event );
 	void OnBrowse( wxCommandEvent& event );
 	void OnPlay( wxCommandEvent& event );
-	void OnSave( wxCommandEvent& event );
+	//void OnSave( wxCommandEvent& event );
 	void OnStop( wxCommandEvent& event );
-	void OnExit( wxCommandEvent& event );
+	//void OnExit( wxCommandEvent& event );
 	void OnTime( wxCommandEvent& event );
 	void *Entry();
 	void SelectMidiOutputDevice(int number);
@@ -88,9 +88,9 @@ private:
 	wxIcon _icon;
 	MidiFile* _midiFile;
 	wxButton* _btnPlay;
-	wxButton* _btnExit;
+	//wxButton* _btnExit;
 	wxButton* _btnBrowse;
-	wxButton* _btnSave; // Temporary, for MidiFile code testing.
+	//wxButton* _btnSave; // Temporary, for MidiFile code testing.
 	//wxButton* _btnStop;
 	wxButton* _btnInfo;
 	wxChoice* _device;

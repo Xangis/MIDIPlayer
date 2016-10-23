@@ -1,7 +1,9 @@
 # TODO
 
 * Allow drag-and-drop of MIDI file to open it.
-* Allow command-line opening of a MIDI file.
+* Make sure we can display track labels containing newlines. Moonlight seems to have one on track 4.
+* Fix track rendering. Filter - Take a Picture uses 18% because all events are redrawn every second.
+  Instead we should have a pre-rendered bitmap we use to draw before drawing the indicator line.
 
 # MIDIPLayer
 

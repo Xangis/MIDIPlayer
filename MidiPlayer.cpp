@@ -13,9 +13,9 @@ BEGIN_EVENT_TABLE( MidiPlayer, wxDialog )
 	EVT_BUTTON( ID_BTN_INFO, MidiPlayer::OnInfo )
 	EVT_BUTTON( ID_BTN_BROWSE, MidiPlayer::OnBrowse )
 	EVT_BUTTON( ID_BTN_PLAY, MidiPlayer::OnPlay )
-	EVT_BUTTON( ID_BTN_SAVE, MidiPlayer::OnSave )
+	//EVT_BUTTON( ID_BTN_SAVE, MidiPlayer::OnSave )
 	EVT_BUTTON( ID_BTN_STOP, MidiPlayer::OnStop )
-	EVT_BUTTON( ID_BTN_EXIT, MidiPlayer::OnExit )
+	//EVT_BUTTON( ID_BTN_EXIT, MidiPlayer::OnExit )
 	EVT_BUTTON( ID_BTN_TIME, MidiPlayer::OnTime )
 END_EVENT_TABLE()
 
@@ -104,23 +104,17 @@ void MidiPlayer::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-	wxBoxSizer* itemBoxSizer4 = new wxBoxSizer(wxHORIZONTAL);
-	itemBoxSizer2->Add(itemBoxSizer4, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
-
-	_btnPlay = new wxButton(itemDialog1, ID_BTN_PLAY, _("Play"));
-	itemBoxSizer4->Add(_btnPlay, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+	//wxBoxSizer* itemBoxSizer4 = new wxBoxSizer(wxHORIZONTAL);
+	//itemBoxSizer2->Add(itemBoxSizer4, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
 	//_btnStop = new wxButton(itemDialog1, ID_BTN_STOP, _("Stop"));
 	//itemBoxSizer4->Add(_btnStop, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-	_btnExit = new wxButton(itemDialog1, ID_BTN_EXIT, _("Exit"));
-	itemBoxSizer4->Add(_btnExit, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+	//_btnExit = new wxButton(itemDialog1, ID_BTN_EXIT, _("Exit"));
+	//itemBoxSizer4->Add(_btnExit, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-	_btnInfo = new wxButton(itemDialog1, ID_BTN_INFO, _("Info"));
-	itemBoxSizer4->Add(_btnInfo, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-	_btnSave = new wxButton(itemDialog1, ID_BTN_SAVE, _("Save"));
-	itemBoxSizer4->Add(_btnSave, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+	//_btnSave = new wxButton(itemDialog1, ID_BTN_SAVE, _("Save"));
+	//itemBoxSizer4->Add(_btnSave, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 	wxBoxSizer* itemBoxSizer25 = new wxBoxSizer(wxHORIZONTAL);
 	itemBoxSizer2->Add(itemBoxSizer25, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
@@ -157,6 +151,9 @@ void MidiPlayer::CreateControls()
         wxMessageBox(message, _("Error Opening MIDI Out"));
     }
 
+    wxStaticText* itemStaticText39 = new wxStaticText( itemDialog1, wxID_STATIC, _("MIDI Device:"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer25->Add(itemStaticText39, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
     _device = new wxChoice( itemDialog1, ID_MIDI_DEVICE, wxDefaultPosition, wxDefaultSize, deviceList );
 	_device->SetSelection(0);
     itemBoxSizer25->Add(_device, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
@@ -173,9 +170,6 @@ void MidiPlayer::CreateControls()
 	_btnBrowse = new wxButton(itemDialog1, ID_BTN_BROWSE, _("Browse"));
 	itemBoxSizer3->Add(_btnBrowse, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-	_trackPanelSizer = new wxBoxSizer(wxVERTICAL);
-	itemBoxSizer2->Add(_trackPanelSizer, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
-
 	wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxHORIZONTAL);
 	itemBoxSizer2->Add(itemBoxSizer5, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
@@ -183,28 +177,37 @@ void MidiPlayer::CreateControls()
 	_txtTimeElapsed = new wxStaticText(itemDialog1, ID_TXT_TIME_ELAPSED, _("Time: 0:00"), wxDefaultPosition, wxSize(120, -1));
 	itemBoxSizer5->Add(_txtTimeElapsed, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-	_txtSongLength = new wxStaticText(itemDialog1, ID_TXT_LENGTH, _("Length:"), wxDefaultPosition, wxSize(200, -1));
+	_txtSongLength = new wxStaticText(itemDialog1, ID_TXT_LENGTH, _("Length: 0:00"), wxDefaultPosition, wxSize(200, -1));
 	itemBoxSizer5->Add(_txtSongLength, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-	wxBoxSizer* itemBoxSizer6 = new wxBoxSizer(wxHORIZONTAL);
+	_btnPlay = new wxButton(itemDialog1, ID_BTN_PLAY, _("Play"));
+	itemBoxSizer5->Add(_btnPlay, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+	_btnInfo = new wxButton(itemDialog1, ID_BTN_INFO, _("Info"));
+	itemBoxSizer5->Add(_btnInfo, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+	_trackPanelSizer = new wxBoxSizer(wxVERTICAL);
+	itemBoxSizer2->Add(_trackPanelSizer, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    
+    wxBoxSizer* itemBoxSizer6 = new wxBoxSizer(wxHORIZONTAL);
 	itemBoxSizer2->Add(itemBoxSizer6, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-	_txtNumEvents = new wxStaticText(itemDialog1, ID_TXT_NUMEVENTS, _("Events:"), wxDefaultPosition, wxSize(100, -1));
+	_txtNumEvents = new wxStaticText(itemDialog1, ID_TXT_NUMEVENTS, _("Events: 0"), wxDefaultPosition, wxSize(100, -1));
 	itemBoxSizer6->Add(_txtNumEvents, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-	_txtNumTracks = new wxStaticText(itemDialog1, ID_TXT_NUMTRACKS, _("Tracks:"), wxDefaultPosition, wxSize(100, -1));
+	_txtNumTracks = new wxStaticText(itemDialog1, ID_TXT_NUMTRACKS, _("Tracks: 0"), wxDefaultPosition, wxSize(86, -1));
 	itemBoxSizer6->Add(_txtNumTracks, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-	_txtSize = new wxStaticText(itemDialog1, ID_TXT_SIZE, _("Size:"), wxDefaultPosition, wxSize(100, -1));
+	_txtSize = new wxStaticText(itemDialog1, ID_TXT_SIZE, _("Size: 0"), wxDefaultPosition, wxSize(100, -1));
 	itemBoxSizer6->Add(_txtSize, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-	_txtType = new wxStaticText(itemDialog1, ID_TXT_TYPE, _("Type:"), wxDefaultPosition, wxSize(100, -1));
+	_txtType = new wxStaticText(itemDialog1, ID_TXT_TYPE, _("Type: 0"), wxDefaultPosition, wxSize(82, -1));
 	itemBoxSizer6->Add(_txtType, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-	_txtPPQN = new wxStaticText(itemDialog1, ID_TXT_TYPE, _("PPQN:"), wxDefaultPosition, wxSize(100, -1));
+	_txtPPQN = new wxStaticText(itemDialog1, ID_TXT_TYPE, _("PPQN: 0"), wxDefaultPosition, wxSize(100, -1));
 	itemBoxSizer6->Add(_txtPPQN, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-	_txtBPM = new wxStaticText(itemDialog1, ID_TXT_TYPE, _("BPM:"), wxDefaultPosition, wxSize(100, -1));
+	_txtBPM = new wxStaticText(itemDialog1, ID_TXT_TYPE, _("BPM: 0"), wxDefaultPosition, wxSize(96, -1));
 	itemBoxSizer6->Add(_txtBPM, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     //wxBoxSizer* itemBoxSizer12 = new wxBoxSizer(wxHORIZONTAL);
@@ -241,24 +244,24 @@ void MidiPlayer::OnInfo( wxCommandEvent& event )
     event.Skip();
 }
 
-void MidiPlayer::OnSave( wxCommandEvent& event )
-{
-	wxString path = wxString::Format( _("%s%s"), "test", _txtFilename->GetLabel() );
-	wxFileDialog fdialog( this, _("Save MIDI File"), path, _(""), _("MIDI Files (*.mid) |*.mid||"), wxFD_SAVE );
-
-	wxString filename;
-
-	if( fdialog.ShowModal() != wxID_OK )
-	{
-		return;
-	}
-
-	wxString fname = fdialog.GetPath();
-
-	_midiFile->Save(fname.c_str());
-
-    event.Skip();
-}
+//void MidiPlayer::OnSave( wxCommandEvent& event )
+//{
+//	wxString path = wxString::Format( _("%s%s"), "test", _txtFilename->GetLabel() );
+//	wxFileDialog fdialog( this, _("Save MIDI File"), path, _(""), _("MIDI Files (*.mid) |*.mid||"), wxFD_SAVE );
+//
+//	wxString filename;
+//
+//	if( fdialog.ShowModal() != wxID_OK )
+//	{
+//		return;
+//	}
+//
+//	wxString fname = fdialog.GetPath();
+//
+//	_midiFile->Save(fname.c_str());
+//
+//    event.Skip();
+//}
 
 void MidiPlayer::OnBrowse( wxCommandEvent& event )
 {
@@ -412,7 +415,7 @@ void MidiPlayer::OnTime( wxCommandEvent& event )
     if( _midiFile != NULL )
     {
         wxSizerItemList list = _trackPanelSizer->GetChildren();
-        for( int i = 0; i < list.size(); i++ )
+        for( unsigned int i = 0; i < list.size(); i++ )
         {
             wxWindow* window = list[i]->GetWindow();
             MidiTrackPanel* panel = dynamic_cast<MidiTrackPanel*>(window);
@@ -424,11 +427,11 @@ void MidiPlayer::OnTime( wxCommandEvent& event )
     }
 }
 
-void MidiPlayer::OnExit( wxCommandEvent& event )
-{
-	Close();
-    event.Skip();
-}
+//void MidiPlayer::OnExit( wxCommandEvent& event )
+//{
+//	Close();
+//    event.Skip();
+//}
 
 // Thread to play the beat - makes dialog independent of sound.
 void* MidiPlayer::Entry( )
