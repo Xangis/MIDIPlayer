@@ -18,10 +18,13 @@ public:
 	void OnPaint( wxPaintEvent& event );
 	void AddMidiNote(int time, int note);
     void SetLengthInTicks(int length) { _trackLength = length; };
-    void SetTrackTitle(wxString& title) { _trackTitle = title; };
+    void SetTrackTitle(wxString& title);
     void SetPlaybackTick(int tick);
+    void GenerateBitmap();
 	DECLARE_EVENT_TABLE()
 private:
+    wxBitmap* _trackBitmap;
+    bool _bitmapValid;
 	int _trackLength;
     int _playbackTick;
 	std::list<std::pair< int, int > > _midiNotes;
