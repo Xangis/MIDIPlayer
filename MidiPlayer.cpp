@@ -94,6 +94,10 @@ bool MidiPlayer::Create( wxWindow* parent, wxWindowID id, const wxString& captio
 #endif
 	Run();
 
+    // Enable drag and drop.
+    SetDropTarget(this);
+    SetDefaultAction(wxDragCopy);
+
     return true;
 }
 
@@ -282,7 +286,7 @@ void MidiPlayer::OnBrowse( wxCommandEvent& event )
     event.Skip();
 }
 
-void MidiPlayer::LoadFile(wxString& filename)
+void MidiPlayer::LoadFile(const wxString& filename)
 {
     if( _midiFile != NULL )
 	{
@@ -570,4 +574,18 @@ void MidiPlayer::OnChangeMidiDevice( wxCommandEvent& event )
         // I don't know why trying to get a std::string into a wxString is so fucking hard.
         //wxMessageBox(wxString(error.getMessage()), _("Error Opening MIDI Out"));
     }
+}
+
+bool MidiPlayer::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString &filenames)
+{
+    if( filenames.size() > 0 )
+    {
+        wxCommandEvent evt = wxCommandEvent(wxEVT_COMMAND_BUTTON_CLICKED, ID_BTN_STOP);
+        OnStop(evt);
+        LoadFile(filenames[0]);
+        wxCommandEvent evt2 = wxCommandEvent(wxEVT_COMMAND_BUTTON_CLICKED, ID_BTN_PLAY);
+        OnPlay(evt2);
+        return true;
+    }
+    return false;
 }

@@ -1,15 +1,16 @@
 # TODO
 
-* Allow drag-and-drop of MIDI file to open it.
-* Make sure we can display track labels containing newlines. Moonlight seems to have one on track 4.
-* Fix track rendering. Filter - Take a Picture uses 18% because all events are redrawn every second.
-  Instead we should have a pre-rendered bitmap we use to draw before drawing the indicator line.
+* Handle tempo changes during playback. We should keep track of both starting tempo, and current running tempo.
+  and recalculate the msec per tick each time if the tempo changes.
 
-# MIDIPLayer
+# MIDIPLayer 2
 
 A reimplementation of MIDI playback, but with a nice detailed interface.
 
-# MIDIPlayer 1:
+A new MIDI engine has been written from scratch and it no longer relies on any DirectX code.
+It uses RtMidi for platform-agnostic MIDI playback.
+
+# MIDIPlayer 1
 
 An ancient, simple Windows app for playing MIDI files. Originally released at
 http://zetacentauri.com

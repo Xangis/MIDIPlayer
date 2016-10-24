@@ -8,6 +8,7 @@
 #include "wx/fs_zip.h"
 #include "wx/html/helpctrl.h"
 #include "wx/stdpaths.h"
+#include "wx/dnd.h"
 #include "RtMidi.h"
 #include "../MidiFile/MidiFile.h"
 
@@ -56,7 +57,7 @@
 /*!
  * wxKeyboard class declaration
  */
-class MidiPlayer: public wxDialog, public wxThread
+class MidiPlayer: public wxDialog, public wxThread, public wxFileDropTarget
 {
     DECLARE_DYNAMIC_CLASS( MidiPlayer )
     DECLARE_EVENT_TABLE()
@@ -81,8 +82,10 @@ public:
 	void SelectMidiOutputChannel(int number);
 	void OnChangeMidiDevice( wxCommandEvent& event );
 	void AllNotesOff();
-    void LoadFile(wxString& filename);
+    void LoadFile(const wxString& filename);
     void SendMidiMessage( unsigned char byte1, unsigned char byte2, unsigned char byte3, unsigned char byte4, bool shortmsg = false );
+    // Drag and drop
+    bool OnDropFiles(wxCoord x, wxCoord y, const wxArrayString &filenames);
 private:
 	wxMutex _mutex;
 	wxIcon _icon;

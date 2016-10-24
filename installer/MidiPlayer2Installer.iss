@@ -7,7 +7,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{CAECD8FC-317B-4DD3-BD61-BD4C89FD3E8B}
 AppName=MidiPlayer
-AppVerName=MidiPlayer 2.0
+AppVerName=MIDIPlayer 2.0
 AppPublisher=Zeta Centauri
 AppPublisherURL=http://zetacentauri.com
 AppSupportURL=http://zetacentauri.com
@@ -16,7 +16,7 @@ DefaultDirName={pf}\Zeta Centauri\MidiPlayer
 DefaultGroupName=Zeta Centauri\MidiPlayer
 LicenseFile=C:\Users\Xangis\code\MidiPlayer\installer\License.txt
 OutputDir=C:\Users\Xangis\code\MidiPlayer\Installer
-OutputBaseFilename=MidiPlayer2Setup
+OutputBaseFilename=MIDIPlayer2Setup
 SetupIconFile=C:\Users\Xangis\code\MidiPlayer\keyicon.ico
 UninstallDisplayIcon={app}\keyicon.ico
 Compression=lzma
