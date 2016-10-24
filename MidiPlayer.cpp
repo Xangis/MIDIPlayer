@@ -477,7 +477,7 @@ void* MidiPlayer::Entry( )
                         {
                             int tempo = midiEvent->lval;
                             double calculatedTempo = 60000000.0 / tempo;
-                            printf("Tempo change to %f.", tempo);
+                            printf("Tempo change to %f.", calculatedTempo);
                             _midiFile->SetBPM(calculatedTempo);
                         }
 						else

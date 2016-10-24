@@ -18,7 +18,7 @@ public:
 	void OnPaint( wxPaintEvent& event );
 	void AddMidiNote(int time, int note);
     void SetLengthInTicks(int length) { _trackLength = length; };
-    void SetTrackTitle(wxString& title);
+    void SetTrackTitle(const wxString& title);
     void SetPlaybackTick(int tick);
     void GenerateBitmap();
 	DECLARE_EVENT_TABLE()

@@ -104,7 +104,7 @@ void MidiTrackPanel::AddMidiNote( int time, int note )
     _bitmapValid = false;
 }
 
-void MidiTrackPanel::SetTrackTitle(wxString& title)
+void MidiTrackPanel::SetTrackTitle(const wxString& title)
 {
     _trackTitle = wxString(title); 
 };
