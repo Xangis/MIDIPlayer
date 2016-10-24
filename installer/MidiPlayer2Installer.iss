@@ -6,14 +6,14 @@
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{CAECD8FC-317B-4DD3-BD61-BD4C89FD3E8B}
-AppName=MidiPlayer
+AppName=MIDIPlayer
 AppVerName=MIDIPlayer 2.0
 AppPublisher=Zeta Centauri
 AppPublisherURL=http://zetacentauri.com
 AppSupportURL=http://zetacentauri.com
 AppUpdatesURL=http://zetacentauri.com
 DefaultDirName={pf}\Zeta Centauri\MidiPlayer
-DefaultGroupName=Zeta Centauri\MidiPlayer
+DefaultGroupName=Zeta Centauri\MIDIPlayer
 LicenseFile=C:\Users\Xangis\code\MidiPlayer\installer\License.txt
 OutputDir=C:\Users\Xangis\code\MidiPlayer\Installer
 OutputBaseFilename=MIDIPlayer2Setup
@@ -36,10 +36,10 @@ Source: "C:\Users\Xangis\code\MidiPlayer\keyicon.ico"; DestDir: "{app}"; Flags: 
 Source: "C:\Users\Xangis\code\MidiPlayer\installer\vcredist2010_x86.exe"; DestDir: "{app}"; Flags: ignoreversion deleteafterinstall
 
 [Icons]
-Name: "{group}\MidiPlayer"; Filename: "{app}\MidiPlayer.exe"; WorkingDir: "{app}"
+Name: "{group}\MIDIPlayer"; Filename: "{app}\MidiPlayer.exe"; WorkingDir: "{app}"
 Name: "{group}\{cm:ProgramOnTheWeb,MidiPlayer}"; Filename: "http://zetacentauri.com/software_midiplayer.htm"
-Name: "{commondesktop}\MidiPlayer"; Filename: "{app}\MidiPlayer.exe"; Tasks: desktopicon; WorkingDir: "{app}"
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\MidiPlayer"; Filename: "{app}\MidiPlayer.exe"; Tasks: quicklaunchicon; WorkingDir: "{app}"
+Name: "{commondesktop}\MIDIPlayer"; Filename: "{app}\MidiPlayer.exe"; Tasks: desktopicon; WorkingDir: "{app}"
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\MIDIPlayer"; Filename: "{app}\MidiPlayer.exe"; Tasks: quicklaunchicon; WorkingDir: "{app}"
 
 [Registry]
 Root: HKCR; Subkey: ".mid"; ValueType: string; ValueName: ""; ValueData: "MidiPlayerMIDIFile"; Flags: uninsdeletevalue
