@@ -8,6 +8,7 @@
 #include "wx/fs_zip.h"
 #include "wx/html/helpctrl.h"
 #include "wx/stdpaths.h"
+#include "wx/dnd.h"
 #include "RtMidi.h"
 #include "../MidiFile/MidiFile.h"
 
@@ -42,6 +43,9 @@
 #define ID_MIDI_DEVICE 10011
 #define ID_TXT_SIZE 10012
 #define ID_TXT_TYPE 10013
+#define ID_BTN_SAVE 10014
+#define ID_BTN_TIME 10015
+#define ID_TXT_TIME_ELAPSED 10016
 
 /*!
  * Compatibility
@@ -53,7 +57,7 @@
 /*!
  * wxKeyboard class declaration
  */
-class MidiPlayer: public wxDialog, public wxThread
+class MidiPlayer: public wxDialog, public wxThread, public wxFileDropTarget
 {
     DECLARE_DYNAMIC_CLASS( MidiPlayer )
     DECLARE_EVENT_TABLE()
@@ -61,7 +65,7 @@ public:
     /// Constructors
     MidiPlayer( );
     MidiPlayer( wxWindow* parent, wxWindowID id = SYMBOL_WXKEYBOARD_IDNAME, const wxString& caption = SYMBOL_WXKEYBOARD_TITLE, const wxPoint& pos = SYMBOL_WXKEYBOARD_POSITION, const wxSize& size = SYMBOL_WXKEYBOARD_SIZE, long style = SYMBOL_WXKEYBOARD_STYLE );
-	virtual ~MidiPlayer();
+	~MidiPlayer();
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_WXKEYBOARD_IDNAME, const wxString& caption = SYMBOL_WXKEYBOARD_TITLE, const wxPoint& pos = SYMBOL_WXKEYBOARD_POSITION, const wxSize& size = SYMBOL_WXKEYBOARD_SIZE, long style = SYMBOL_WXKEYBOARD_STYLE );
     void CreateControls();
@@ -69,39 +73,46 @@ public:
 	void OnInfo( wxCommandEvent& event );
 	void OnBrowse( wxCommandEvent& event );
 	void OnPlay( wxCommandEvent& event );
-	//void OnStop( wxCommandEvent& event );
-	void OnExit( wxCommandEvent& event );
+	//void OnSave( wxCommandEvent& event );
+	void OnStop( wxCommandEvent& event );
+	//void OnExit( wxCommandEvent& event );
+	void OnTime( wxCommandEvent& event );
 	void *Entry();
 	void SelectMidiOutputDevice(int number);
 	void SelectMidiOutputChannel(int number);
 	void OnChangeMidiDevice( wxCommandEvent& event );
 	void AllNotesOff();
+    void LoadFile(const wxString& filename);
     void SendMidiMessage( unsigned char byte1, unsigned char byte2, unsigned char byte3, unsigned char byte4, bool shortmsg = false );
+    // Drag and drop
+    bool OnDropFiles(wxCoord x, wxCoord y, const wxArrayString &filenames);
 private:
 	wxMutex _mutex;
 	wxIcon _icon;
 	MidiFile* _midiFile;
 	wxButton* _btnPlay;
-	wxButton* _btnExit;
+	//wxButton* _btnExit;
 	wxButton* _btnBrowse;
+	//wxButton* _btnSave; // Temporary, for MidiFile code testing.
 	//wxButton* _btnStop;
 	wxButton* _btnInfo;
 	wxChoice* _device;
 	wxTextCtrl* _txtFilename;
 	wxStaticText* _txtNumEvents;
 	wxStaticText* _txtNumTracks;
-	wxStaticText* _txtLoadedFile;
 	wxStaticText* _txtSongLength;
 	wxStaticText* _txtSize;
 	wxStaticText* _txtType;
 	wxStaticText* _txtPPQN;
 	wxStaticText* _txtBPM;
+    wxStaticText* _txtTimeElapsed;
 	std::list<wxPanel*> _trackPanels;
 	wxSizer* _trackPanelSizer;
 	bool _playing;		// Are we playing?
     int _outputChannel;
     int _midiOutputDeviceNumber;
 	double _numTicksElapsed;
+    double _numMsecElapsed;
     RtMidiOut* _midiOutDevice;
 #ifdef WIN32
 	LARGE_INTEGER _currtime;
