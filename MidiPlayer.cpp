@@ -469,7 +469,6 @@ void* MidiPlayer::Entry( )
 						// So far we only send note on and note off data.
 						if( midiEvent->message >= 128 && midiEvent->message < 224 )
 						{
-							printf("MIDI Note found.\n");
 							// 00 (not used), 7F (velocity), 2B (note number), 9X (note on)+channel
 							SendMidiMessage( 0, midiEvent->value2, midiEvent->value1, midiEvent->message );
 						}
