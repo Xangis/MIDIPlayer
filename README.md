@@ -1,7 +1,6 @@
 # TODO
 
-* Handle tempo changes during playback. We should keep track of both starting tempo, and current running tempo.
-  and recalculate the msec per tick each time if the tempo changes.
+* Fix the drag-and-drop destructor crash so we can re-enable drag and drop.
 
 # MIDIPLayer 2
 
@@ -9,6 +8,8 @@ A reimplementation of MIDI playback, but with a nice detailed interface.
 
 A new MIDI engine has been written from scratch and it no longer relies on any DirectX code.
 It uses RtMidi for platform-agnostic MIDI playback.
+
+It also showss the individual tracks of the MIDI file.
 
 # MIDIPlayer 1
 

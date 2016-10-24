@@ -26,7 +26,11 @@ MidiPlayer::MidiPlayer( )
 
 MidiPlayer::~MidiPlayer()
 {
-	_playing = false;
+    // Disable drag and drop. If we don't do this, the program crashes.
+    //SetDefaultAction(wxDragNone);
+    //SetDropTarget(NULL);
+
+    _playing = false;
 	Pause();
 	AllNotesOff();
 	// Give everything a chance to finish up.
@@ -95,8 +99,8 @@ bool MidiPlayer::Create( wxWindow* parent, wxWindowID id, const wxString& captio
 	Run();
 
     // Enable drag and drop.
-    SetDropTarget(this);
-    SetDefaultAction(wxDragCopy);
+    //SetDropTarget(this);
+    //SetDefaultAction(wxDragCopy);
 
     return true;
 }
@@ -107,18 +111,6 @@ void MidiPlayer::CreateControls()
 
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
-
-	//wxBoxSizer* itemBoxSizer4 = new wxBoxSizer(wxHORIZONTAL);
-	//itemBoxSizer2->Add(itemBoxSizer4, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
-
-	//_btnStop = new wxButton(itemDialog1, ID_BTN_STOP, _("Stop"));
-	//itemBoxSizer4->Add(_btnStop, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-	//_btnExit = new wxButton(itemDialog1, ID_BTN_EXIT, _("Exit"));
-	//itemBoxSizer4->Add(_btnExit, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-	//_btnSave = new wxButton(itemDialog1, ID_BTN_SAVE, _("Save"));
-	//itemBoxSizer4->Add(_btnSave, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 	wxBoxSizer* itemBoxSizer25 = new wxBoxSizer(wxHORIZONTAL);
 	itemBoxSizer2->Add(itemBoxSizer25, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
@@ -213,9 +205,6 @@ void MidiPlayer::CreateControls()
 
 	_txtBPM = new wxStaticText(itemDialog1, ID_TXT_TYPE, _("BPM: 0"), wxDefaultPosition, wxSize(96, -1));
 	itemBoxSizer6->Add(_txtBPM, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    //wxBoxSizer* itemBoxSizer12 = new wxBoxSizer(wxHORIZONTAL);
-    //itemBoxSizer2->Add(itemBoxSizer12, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 }
 
 /**
@@ -336,7 +325,7 @@ void MidiPlayer::LoadFile(const wxString& filename)
 		std::list<MIDIEvent*>* events = track->GetEvents();
 		for( std::list<MIDIEvent*>::iterator it = events->begin(); it != events->end(); it++ )
 		{
-			if( (*it)->message > 0x90 && (*it)->message < 0xA0 )
+			if( (*it)->message >= 0x90 && (*it)->message < 0xA0 )
 			{
 				panel->AddMidiNote( (*it)->absoluteTime, (*it)->value1 );
 			}
@@ -478,16 +467,19 @@ void* MidiPlayer::Entry( )
 					{
 						MIDIEvent* midiEvent = *iter;
 						// So far we only send note on and note off data.
-						if( midiEvent->message >= 144 && midiEvent->message < 176 )
+						if( midiEvent->message >= 128 && midiEvent->message < 224 )
 						{
 							printf("MIDI Note found.\n");
 							// 00 (not used), 7F (velocity), 2B (note number), 9X (note on)+channel
 							SendMidiMessage( 0, midiEvent->value2, midiEvent->value1, midiEvent->message );
 						}
-						else if( midiEvent->message >= 192 && midiEvent->message < 208 )
-						{
-							SendMidiMessage( 0, 0, midiEvent->value1, midiEvent->message );
-						}
+                        else if( midiEvent->message == 0xFF && midiEvent->value1 == 0x51 ) // Tempo change message.
+                        {
+                            int tempo = midiEvent->lval;
+                            double calculatedTempo = 60000000.0 / tempo;
+                            printf("Tempo change to %f.", tempo);
+                            _midiFile->SetBPM(calculatedTempo);
+                        }
 						else
 						{
 							printf("Not sure what to do with message %d.\n", midiEvent->message );
