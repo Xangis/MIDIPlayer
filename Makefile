@@ -27,7 +27,7 @@ CXX = $(shell $(WX_CONFIG) --cxx -ggdb)
 all:    $(PROGRAM)
 
 $(PROGRAM):	$(OBJECTS)
-	$(CXX) -o $(PROGRAM) $(OBJECTS) -L$(LIBDIR) `$(WX_CONFIG) --libs` -lportaudio -lpthread
+	$(CXX) -o $(PROGRAM) $(OBJECTS) -L$(LIBDIR) `$(WX_CONFIG) --libs` -lportaudio -lpthread -framework CoreMidi -framework CoreAudio
 
 clean: 
 	rm -f *.o $(PROGRAM) $(INCLUDEDIR3)/*.o
