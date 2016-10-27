@@ -79,10 +79,16 @@ bool MidiPlayer::Create( wxWindow* parent, wxWindowID id, const wxString& captio
 	//	wxMessageBox( _("Unable to load help file.  Please make sure that proximacontrol.htb is in the program directory." ));
 	//}
 	// Load icon.
-	if( _icon.LoadFile(_("keyicon.ico"), wxBITMAP_TYPE_ICO ))
-	{
-		SetIcon(_icon);
-	}
+
+#ifndef __APPLE__
+        wxString filepath = _("keyicon.ico");
+#else
+        wxString filepath = wxString::Format(_("%s//%s"), wxStandardPaths::Get().GetResourcesDir(), _("keyicon.ico"));
+#endif
+        if( _icon.LoadFile(filepath, wxBITMAP_TYPE_ICO ))
+        {
+                SetIcon(_icon);
+        }
 
 #ifdef WIN32
 	// Set up timer
