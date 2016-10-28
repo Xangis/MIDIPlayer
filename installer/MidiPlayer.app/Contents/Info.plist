@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleIconFile</key>
-	<string>midiplayer.icns</string>
+	<string>MidiPlayer.icns</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.zetacentauri.MidiPlayer</string>
+	<string>com.zetacentauri.MIDIPlayer</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
@@ -23,7 +23,7 @@
         <key>LSApplicationCategoryType</key>
         <string>public.app-category.music</string>
 	<key>CFBundleName</key>
-	<string>MidiPlayer</string>
+	<string>MIDIPlayer</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2016 Jason Champion. All rights reserved.</string>
 	<key>CFBundleDocumentTypes</key>
@@ -34,9 +34,9 @@
 				<string>mid</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>midiplayer.icns</string>
+			<string>MidiPlayer.icns</string>
 			<key>CFBundleTypeName</key>
-			<string>MidiPlayer Patch</string>
+			<string>MIDI Song</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
