@@ -172,6 +172,9 @@ void MidiPlayer::CreateControls()
 	_btnBrowse = new wxButton(itemDialog1, ID_BTN_BROWSE, _("Browse"));
 	itemBoxSizer3->Add(_btnBrowse, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+	//_btnSave = new wxButton(itemDialog1, ID_BTN_SAVE, _("Save"));
+	//itemBoxSizer3->Add(_btnSave, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
 	wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxHORIZONTAL);
 	itemBoxSizer2->Add(itemBoxSizer5, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
@@ -230,7 +233,7 @@ void MidiPlayer::OnInfo( wxCommandEvent& event )
 	// Show about box.
     wxAboutDialogInfo info;
     info.SetName(_("MidiPlayer"));
-    info.SetVersion(_("2.0"));
+    info.SetVersion(_("2.1"));
     info.SetCopyright(_("(c) 2006-2016 Zeta Centauri"));
 	info.AddDeveloper(_("Jason Champion"));
 	//info.SetIcon(_icon);
