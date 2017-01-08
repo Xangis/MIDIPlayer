@@ -314,15 +314,16 @@ void MidiPlayer::LoadFile(const wxString& filename)
 	}
 	_txtSongLength->SetLabel(wxString::Format(_("Length: %d:%02d (%d ticks)"), minutes, seconds, ticks));
 
-	// Clear any existing tracks before adding new ones.
+    // Clear existing tracks.
 	_trackPanelSizer->Clear(true);
+    _trackPanelSizer->Show(false);
 	for( int i = 0; i < _midiFile->GetNumTracks(); i++ )
 	{
 		//wxPanel* panel = new wxPanel(this, 0, 0, 620, 40);
 		MidiTrackPanel* panel = new MidiTrackPanel(this, -1);
 		panel->SetSize(620, 40);
         int colorIterator = i;
-        if( colorIterator >= 4 ) { colorIterator++; }
+        if( colorIterator >= 4 ) { colorIterator++; } // Skip this color, it's ugly.
 		panel->SetBackgroundColour(wxColour(((colorIterator+1) * 33) % 128, ((colorIterator + 1) * 43) % 224, ((colorIterator + 1) * 65) % 224));
         panel->SetLengthInTicks(ticks);
         const unsigned char* title = _midiFile->GetTrackData(i)->GetTitle();
@@ -341,7 +342,9 @@ void MidiPlayer::LoadFile(const wxString& filename)
 		}
 		_trackPanelSizer->Add(panel);
 	}
+    _trackPanelSizer->Show(true);
 	Fit();
+    Layout();
 }
 
 void MidiPlayer::OnPlay( wxCommandEvent& event )

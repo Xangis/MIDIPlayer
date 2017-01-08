@@ -5,6 +5,10 @@
 * More + better encapsulation for the MIDIFile class. Some things are ugly for
   the sake of expediency.
 
+# MIDIPlayer 2.11 Changes (January 2017)
+
+* Fixed window redraw problem when loading a new song when one is already loaded.
+
 # MIDIPlayer 2.1 Changes (October 2016)
 
 * Added some error handling for loading files with incorrect track length data.
