@@ -11,6 +11,7 @@ BEGIN_EVENT_TABLE( MidiPlayer, wxDialog )
 	EVT_CHOICE( ID_MIDI_DEVICE, MidiPlayer::OnChangeMidiDevice )
 	//EVT_BUTTON( ID_HELPBUTTON, MidiPlayer::OnHelp )
 	EVT_BUTTON( ID_BTN_INFO, MidiPlayer::OnInfo )
+    EVT_BUTTON( ID_BTN_PAUSE, MidiPlayer::OnPause )
 	EVT_BUTTON( ID_BTN_BROWSE, MidiPlayer::OnBrowse )
 	EVT_BUTTON( ID_BTN_PLAY, MidiPlayer::OnPlay )
 	//EVT_BUTTON( ID_BTN_SAVE, MidiPlayer::OnSave )
@@ -31,6 +32,7 @@ MidiPlayer::~MidiPlayer()
     //SetDropTarget(NULL);
 
     _playing = false;
+    _paused = false;
 	Pause();
 	AllNotesOff();
 	// Give everything a chance to finish up.
@@ -57,6 +59,7 @@ bool MidiPlayer::Create( wxWindow* parent, wxWindowID id, const wxString& captio
 	_device = NULL;
 	_midiFile = NULL;
 	_playing = false;
+    _paused = false;
     SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
     _midiOutDevice = new RtMidiOut();
     wxDialog::Create( parent, id, caption, pos, size, style );
@@ -179,14 +182,18 @@ void MidiPlayer::CreateControls()
 	itemBoxSizer2->Add(itemBoxSizer5, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
 	//_txtTimeElapsed = new wxStaticText(itemDialog1, ID_TXT_TIME_ELAPSED, _("Time: 0:00.000"), wxDefaultPosition, wxSize(120, -1));
-	_txtTimeElapsed = new wxStaticText(itemDialog1, ID_TXT_TIME_ELAPSED, _("Time: 0:00"), wxDefaultPosition, wxSize(120, -1));
+	_txtTimeElapsed = new wxStaticText(itemDialog1, ID_TXT_TIME_ELAPSED, _("Time: 0:00"), wxDefaultPosition, wxSize(106, -1));
 	itemBoxSizer5->Add(_txtTimeElapsed, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-	_txtSongLength = new wxStaticText(itemDialog1, ID_TXT_LENGTH, _("Length: 0:00"), wxDefaultPosition, wxSize(200, -1));
+	_txtSongLength = new wxStaticText(itemDialog1, ID_TXT_LENGTH, _("Length: 0:00"), wxDefaultPosition, wxSize(190, -1));
 	itemBoxSizer5->Add(_txtSongLength, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 	_btnPlay = new wxButton(itemDialog1, ID_BTN_PLAY, _("Play"));
 	itemBoxSizer5->Add(_btnPlay, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+	_btnPause = new wxButton(itemDialog1, ID_BTN_PAUSE, _("Pause"));
+	itemBoxSizer5->Add(_btnPause, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    _btnPause->Enable(false);
 
 	_btnInfo = new wxButton(itemDialog1, ID_BTN_INFO, _("Info"));
 	itemBoxSizer5->Add(_btnInfo, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -225,6 +232,22 @@ void MidiPlayer::OnCloseWindow( wxCloseEvent& event )
     event.Skip();
 }
 
+void MidiPlayer::OnPause( wxCommandEvent& event )
+{
+    if( _paused )
+    {
+        _btnPause->SetLabel(_("Pause"));
+        _paused = false;
+    }
+    else
+    {
+        _btnPause->SetLabel(_("Unpause"));
+        _paused = true;
+        AllNotesOff();
+    }
+    event.Skip();
+}
+
 /**
 * Shows about box.
 */
@@ -233,8 +256,8 @@ void MidiPlayer::OnInfo( wxCommandEvent& event )
 	// Show about box.
     wxAboutDialogInfo info;
     info.SetName(_("MidiPlayer"));
-    info.SetVersion(_("2.1"));
-    info.SetCopyright(_("(c) 2006-2016 Zeta Centauri"));
+    info.SetVersion(_("2.11"));
+    info.SetCopyright(_("(c) 2006-2017 Zeta Centauri"));
 	info.AddDeveloper(_("Jason Champion"));
 	//info.SetIcon(_icon);
 	info.SetLicense(_("MidiPlayer is freeware and may be distributed freely."));
@@ -377,12 +400,15 @@ void MidiPlayer::OnPlay( wxCommandEvent& event )
             _txtTimeElapsed->SetLabel("Time: 0:00");
 		    _playing = true;
 		    _btnPlay->SetLabel(_("Stop"));
+            _btnPause->Enable(true);
         }
 	}
 	else
 	{
 		_playing = false;
+        _paused = false;
 		_btnPlay->SetLabel(_("Play"));
+        _btnPause->Enable(false);
         AllNotesOff();
 	}
 	_mutex.Unlock();
@@ -397,6 +423,7 @@ void MidiPlayer::OnStop( wxCommandEvent& event )
 {
 	_mutex.Lock();
 	_playing = false;
+    _paused = false;
 	_btnPlay->SetLabel(_("Play"));
 	_mutex.Unlock();
     AllNotesOff();
@@ -448,7 +475,14 @@ void* MidiPlayer::Entry( )
 	while( !TestDestroy())
 	{
 		_mutex.Lock();
-		if( _playing == true && _midiFile != NULL )
+        if( _paused == true )
+        {
+            // Keep our counter ticking so we don't jump a bunch of events when unpausing.
+            QueryPerformanceCounter( &_lasttime );
+			_mutex.Unlock();
+			Sleep(1);
+        }
+		else if( _playing == true && _midiFile != NULL )
 		{
 			// Get pulse length in milliseconds.
 			double pulseLength = _midiFile->GetPulseLength() * 1000.0;

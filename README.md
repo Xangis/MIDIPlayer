@@ -8,6 +8,7 @@
 # MIDIPlayer 2.11 Changes (January 2017)
 
 * Fixed window redraw problem when loading a new song when one is already loaded.
+* Added pause button.
 
 # MIDIPlayer 2.1 Changes (October 2016)
 
