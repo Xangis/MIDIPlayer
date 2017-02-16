@@ -9,13 +9,11 @@ IMPLEMENT_DYNAMIC_CLASS( MidiPlayer, wxDialog )
 BEGIN_EVENT_TABLE( MidiPlayer, wxDialog )
     EVT_CLOSE( MidiPlayer::OnCloseWindow )
 	EVT_CHOICE( ID_MIDI_DEVICE, MidiPlayer::OnChangeMidiDevice )
-	//EVT_BUTTON( ID_HELPBUTTON, MidiPlayer::OnHelp )
 	EVT_BUTTON( ID_BTN_INFO, MidiPlayer::OnInfo )
 	EVT_BUTTON( ID_BTN_BROWSE, MidiPlayer::OnBrowse )
 	EVT_BUTTON( ID_BTN_PLAY, MidiPlayer::OnPlay )
 	//EVT_BUTTON( ID_BTN_SAVE, MidiPlayer::OnSave )
 	EVT_BUTTON( ID_BTN_STOP, MidiPlayer::OnStop )
-	//EVT_BUTTON( ID_BTN_EXIT, MidiPlayer::OnExit )
 	EVT_BUTTON( ID_BTN_TIME, MidiPlayer::OnTime )
 END_EVENT_TABLE()
 
@@ -53,6 +51,9 @@ MidiPlayer::MidiPlayer( wxWindow* parent, wxWindowID id, const wxString& caption
 
 bool MidiPlayer::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
+#ifdef __APPLE__
+    host_get_clock_service(mach_host_self(), SYSTEM_CLOCK, &_clock);
+#endif
 	//_helpCtrl = NULL;
 	_device = NULL;
 	_midiFile = NULL;
