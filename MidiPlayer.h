@@ -46,6 +46,7 @@
 #define ID_BTN_SAVE 10014
 #define ID_BTN_TIME 10015
 #define ID_TXT_TIME_ELAPSED 10016
+#define ID_BTN_PAUSE 10017
 
 /*!
  * Compatibility
@@ -73,6 +74,7 @@ public:
 	void OnInfo( wxCommandEvent& event );
 	void OnBrowse( wxCommandEvent& event );
 	void OnPlay( wxCommandEvent& event );
+    void OnPause( wxCommandEvent& event );
 	//void OnSave( wxCommandEvent& event );
 	void OnStop( wxCommandEvent& event );
 	//void OnExit( wxCommandEvent& event );
@@ -96,6 +98,7 @@ private:
 	//wxButton* _btnSave; // Temporary, for MidiFile code testing.
 	//wxButton* _btnStop;
 	wxButton* _btnInfo;
+    wxButton* _btnPause;
 	wxChoice* _device;
 	wxTextCtrl* _txtFilename;
 	wxStaticText* _txtNumEvents;
@@ -108,7 +111,8 @@ private:
     wxStaticText* _txtTimeElapsed;
 	std::list<wxPanel*> _trackPanels;
 	wxSizer* _trackPanelSizer;
-	bool _playing;		// Are we playing?
+	bool _playing; // Are we playing?
+    bool _paused; // Are we paused?
     int _outputChannel;
     int _midiOutputDeviceNumber;
 	double _numTicksElapsed;
