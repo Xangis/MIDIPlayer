@@ -479,7 +479,15 @@ void* MidiPlayer::Entry( )
         if( _paused == true )
         {
             // Keep our counter ticking so we don't jump a bunch of events when unpausing.
+#ifdef WIN32
             QueryPerformanceCounter( &_lasttime );
+#endif
+#ifdef linux
+            clock_gettime(CLOCK_MONOTONIC, &_lasttime);
+#endif
+#ifdef __APPLE__
+			clock_get_time(_clock, &_lasttime);
+#endif
 			_mutex.Unlock();
 			Sleep(1);
         }

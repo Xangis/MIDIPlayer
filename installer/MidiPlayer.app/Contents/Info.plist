@@ -9,7 +9,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.zetacentauri.MIDIPlayer</string>
 	<key>CFBundleVersion</key>
-	<string>2.0.1</string>
+	<string>2.1.1</string>
 	<key>CFBundleSignature</key>
 	<string>ttxt</string>
 	<key>CFBundleExecutable</key>
@@ -19,13 +19,13 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.0</string>
+	<string>2.11</string>
         <key>LSApplicationCategoryType</key>
         <string>public.app-category.music</string>
 	<key>CFBundleName</key>
 	<string>MIDIPlayer</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2016 Jason Champion. All rights reserved.</string>
+	<string>Copyright © 2017 Jason Champion. All rights reserved.</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
