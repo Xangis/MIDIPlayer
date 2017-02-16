@@ -9,7 +9,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.zetacentauri.MIDIPlayer</string>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>2.0.1</string>
 	<key>CFBundleSignature</key>
 	<string>ttxt</string>
 	<key>CFBundleExecutable</key>
@@ -19,7 +19,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>2.0</string>
         <key>LSApplicationCategoryType</key>
         <string>public.app-category.music</string>
 	<key>CFBundleName</key>
