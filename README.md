@@ -22,7 +22,7 @@ to build. You can get it here:
 
 http://wxwidgets.org/
 
-Sound playback requires RtMid, available here:
+Sound playback requires RtMidi, available here:
 
 http://www.music.mcgill.ca/~gary/rtmidi/
 
@@ -39,6 +39,9 @@ sudo apt-get install librtmidi-dev libwxgtk3.0-dev
 
 Build the app by running "Make -f Makefile.linux". You may need to edit some path
 settings if it doesn't see your rtmidi libraries.
+
+You're probably better off downloading RtMidi from their website rather than using the
+version available in your Linux distribution's repositories.
 
 ### OSX
 
