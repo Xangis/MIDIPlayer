@@ -23,7 +23,6 @@
 *.lib
 
 # Executables
-*.exe
 *.out
 
 # Misc Visual Studio
@@ -35,5 +34,8 @@ UpgradeLog.XML
 *.filters
 *.user
 ipch/
+Debug/
+Release/
 
+# Other
 .DS_Store
