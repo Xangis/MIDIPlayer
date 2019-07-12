@@ -49,12 +49,21 @@ Building is similar to linux, but just run "make". You'll have to have the comma
 compiler installed for that to work.
 
 Once the program is built, run "OSXLibraryPaths.sh" in the installer directory to
-set paths inside the application bundle.
+set paths inside the application bundle. You'll have to run "OSXCopyLibs.sh" the first
+time to copy the libraries in, though.
 
 Ths OSX build has had the least amount of testing and may need some improvements to
 be easier to build.
 
+Building wxWidgets won't work out of the box. You'll need to specify the SDK version, like so:
+
+./configure --with-macosx-version-min=10.11
+
 # Changelog
+
+### MIDIPlayer 2.12 Changes (??? 2019)
+
+* Updated RtMIDI from 2.1.0 to 4.0.0.
 
 ### MIDIPlayer 2.11 Changes (January 2017)
 

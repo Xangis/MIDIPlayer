@@ -7,9 +7,7 @@ PROGRAM = installer/MidiPlayer.app/Contents/MacOS/MidiPlayer
 
 # Directory containing library portions of code.
 INCLUDEDIR2 = /usr/local/include
-# To switch to rtmidi 2.1, we need to change the error handling in wxkeyboard.cpp and also find a way to get MIDI devices
-# to work, because they don't in 2.1 for some reason. Something to do with the dummy device, according to an error.
-INCLUDEDIR3 = ../../lib/rtmidi-2.1.0
+INCLUDEDIR3 = ../../lib/rtmidi-4.0.0
 LIBDIR = /usr/local/lib
 
 # Object files
