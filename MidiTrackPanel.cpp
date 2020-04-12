@@ -38,6 +38,24 @@ void MidiTrackPanel::SetPlaybackTick(int tick)
     Refresh();
 }
 
+unsigned int MidiTrackPanel::CalculateNotePosition(unsigned int windowHeight, unsigned int noteNumber)
+{
+	// Compress the first and last octave into half as many pixels.
+	if (noteNumber < 24)
+	{
+		noteNumber = noteNumber / 2;
+	}
+	else if (noteNumber > 103)
+	{
+		noteNumber = 92 + ((noteNumber - 103) / 2); // Max value is 104.
+	}
+	else
+	{
+		noteNumber -= 12;
+	}
+	return windowHeight - ((noteNumber * windowHeight) / 104);
+}
+
 void MidiTrackPanel::GenerateBitmap()
 {
     if( _trackBitmap != NULL )
@@ -62,7 +80,7 @@ void MidiTrackPanel::GenerateBitmap()
         {
             timePos = ((*it).first * width) / _trackLength;
         }
-		dc.DrawRectangle(timePos, ((*it).second * 35)/127, 3, 3);
+		dc.DrawRectangle(timePos, CalculateNotePosition(35, (*it).second), 3, 3);
     }
     if( _trackTitle.length() > 0 )
     {

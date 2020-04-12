@@ -29,7 +29,11 @@ http://www.music.mcgill.ca/~gary/rtmidi/
 ### Windows
 
 Use the Visual Studio project. You'll probably have to set the wxWidgets include and
-library paths in order to build.
+library paths in order to build because they'll be set to whatever was on the last
+dev machine that was used.
+
+The Visual Studio project is for Visual Studio 2013. If you have a newer version,
+it should auto-convert.
 
 ### Linux
 
@@ -61,9 +65,10 @@ Building wxWidgets won't work out of the box. You'll need to specify the SDK ver
 
 # Changelog
 
-### MIDIPlayer 2.12 Changes (??? 2019)
+### MIDIPlayer 2.12 Changes (April? 2020)
 
-* Updated RtMIDI from 2.1.0 to 4.0.0.
+* Fixed track note visualization because it was flipped on the Y axis (low notes were shown high).
+[TODO] * Updated RtMIDI from 2.1.0 to 4.0.0.
 
 ### MIDIPlayer 2.11 Changes (January 2017)
 

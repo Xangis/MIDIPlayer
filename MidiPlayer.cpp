@@ -257,8 +257,8 @@ void MidiPlayer::OnInfo( wxCommandEvent& event )
 	// Show about box.
     wxAboutDialogInfo info;
     info.SetName(_("MidiPlayer"));
-    info.SetVersion(_("2.11"));
-    info.SetCopyright(_("(c) 2006-2017 Zeta Centauri"));
+    info.SetVersion(_("2.12"));
+    info.SetCopyright(_("(c) 2006-2020 Zeta Centauri"));
 	info.AddDeveloper(_("Jason Champion"));
 	//info.SetIcon(_icon);
 	info.SetLicense(_("MidiPlayer is freeware and may be distributed freely."));

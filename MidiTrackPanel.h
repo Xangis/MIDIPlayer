@@ -23,6 +23,7 @@ public:
     void SetTrackTitle(const wxString& title);
     void SetPlaybackTick(int tick);
     void GenerateBitmap();
+	unsigned int CalculateNotePosition(unsigned int windowHeight, unsigned int noteNumber);
 	DECLARE_EVENT_TABLE()
 private:
     wxBitmap* _trackBitmap;
