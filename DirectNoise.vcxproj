@@ -19,12 +19,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -50,10 +50,10 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\admin\code\rtmidi-2.1.0;C:\Users\admin\code\wxWidgets-3.0.2\include;$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\admin\code\rtmidi-2.1.0;C:\Users\admin\code\wxWidgets-3.0.2\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\admin\code\MidiFile;C:\Users\admin\code\wxWidgets-3.0.2\lib\vc_lib;C:\Users\admin\code\rtmidi-2.1.0\lib;$(LibraryPath)</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\admin\code\rtmidi-2.1.0\lib;C:\Users\admin\code\MidiFile;C:\Users\admin\code\wxWidgets-3.0.2\lib\vc_lib;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:\lib\rtmidi-2.1.0;E:\lib\wxWidgets-3.2.1\include;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:\lib\rtmidi-2.1.0;E:\lib\wxWidgets-3.2.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:\lib\rtmidi-2.1.0\lib;E:\code\MidiFile;E:\lib\wxWidgets-3.2.1\lib\vc_lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:\lib\rtmidi-2.1.0\lib;E:\code\MidiFile;E:\lib\wxWidgets-3.2.1\lib\vc_lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -67,7 +67,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>MidiFiled.lib;wxmsw30ud_core.lib;wxmsw30ud_adv.lib;wxbase30ud.lib;kernel32.lib;user32.lib;gdi32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comctl32.lib;rpcrt4.lib;wxtiffd.lib;wxpngd.lib;wxjpegd.lib;wxzlibd.lib;winmm.lib;wxmsw30ud_html.lib;rtmidid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>MidiFiled.lib;wxmsw32ud_core.lib;wxmsw32ud_adv.lib;wxbase32ud.lib;kernel32.lib;user32.lib;gdi32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comctl32.lib;rpcrt4.lib;wxtiffd.lib;wxpngd.lib;wxjpegd.lib;wxzlibd.lib;winmm.lib;wxmsw32ud_html.lib;rtmidid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)MidiPlayer.exe</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)DirectNoise.pdb</ProgramDatabaseFile>
@@ -84,7 +84,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>MidiFile.lib;wxmsw30u_core.lib;wxmsw30u_adv.lib;wxbase30u.lib;kernel32.lib;user32.lib;gdi32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comctl32.lib;rpcrt4.lib;wxtiff.lib;wxpng.lib;wxjpeg.lib;wxzlib.lib;winmm.lib;wxmsw30u_html.lib;rtmidi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>MidiFile.lib;wxmsw32u_core.lib;wxmsw32u_adv.lib;wxbase32u.lib;kernel32.lib;user32.lib;gdi32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comctl32.lib;rpcrt4.lib;wxtiff.lib;wxpng.lib;wxjpeg.lib;wxzlib.lib;winmm.lib;wxmsw32u_html.lib;rtmidi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)MidiPlayer.exe</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
